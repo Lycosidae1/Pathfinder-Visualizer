@@ -1,34 +1,72 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { MouseService, MouseState } from '../mouse-service.service';
 
 @Component({
   selector: 'app-square',
   templateUrl: './square.component.html',
   styleUrls: ['./square.component.css']
 })
-export class SquareComponent {
-  @Input() hover?: boolean;
-  @Output() eventItem = new EventEmitter<boolean>()
-  blocked: boolean;
-  currentStyles: {} = ''
-  constructor(){
-    this.blocked = false;
+export class SquareComponent implements OnInit {
+  private state!: boolean;
+  private mouseState!: MouseState;
+  currentStyles!: {[klass: string]: any; };
+
+  constructor(private mouseService: MouseService){
+    this.applyNeutralColor();
   };
 
-  block(): void {
-    this.blocked = !this.blocked;
-    this.eventItem.emit(true);
+  ngOnInit(): void {
+    this.mouseService.mouseState.asObservable().subscribe((state) => {
+      this.mouseState = state;
+    })
   }
 
-  over(): void {
-    if(this.hover == true) {
-      //elem.style.setProperty('background-color', 'lime');
-      this.currentStyles = {
-        'background-color': this.blocked ? 'black' : 'white',
-      }
+  block(): void {
+    if(this.mouseState == MouseState.DOWN) {
+      this.applyColor();
+      this.state = !this.state;
     }
   }
 
-  done():void {
-    this.eventItem.emit(false);
+  removeSelection(e:any): void {
+    console.log(e);
+    if(this.currentStyles['background-color'] === 'black') {
+      this.applyNeutralColor();
+      this.state = !this.state;
+    }
+    else {
+      this.applyColor();
+    }
+    
   }
+
+  firstCase(): void {
+    if(this.mouseState == MouseState.DOWN) {
+      this.applyColor();
+      this.state = !this.state;
+    }
+  }
+
+  startSelection(): void {
+    this.mouseService.mouseDown();
+    //this.applyColor();
+  }
+
+  endSelection(): void {
+    this.mouseService.mouseUp();
+  }
+
+  applyColor(): void {
+    this.currentStyles = {
+      'background-color': 'black',
+    }
+  }
+
+  applyNeutralColor(): void {
+    this.currentStyles = {
+      'background-color': 'white',
+    }
+  }
+
+
 }

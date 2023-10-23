@@ -31,9 +31,4 @@ export class AppComponent {
     if (this.width.length - 1 >= DIMENSION.MIN_WIDTH)
       this.width = Array(this.width.length - 1);
   }
-
-  handleEvent(): void {
-    this.value = true;
-    console.log("test");
-  }
 }
