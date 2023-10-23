@@ -1,0 +1,10 @@
+.square {
+    height: 50px;
+    width: 50px;
+    background-color: white;
+    border: solid lightblue 1px;
+}
+
+:hover {
+    background-color: yellow;
+}

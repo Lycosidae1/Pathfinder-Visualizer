@@ -1,0 +1,21 @@
+.main-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.button-row{
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.columnButtons{
+    display:flex;
+    flex-direction: column;
+}
+
+.board-container{
+    display: flex;
+}
