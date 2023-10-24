@@ -6,16 +6,6 @@
     flex-direction: column;
 }
 
-.button-row{
-    display: flex;
-    margin-bottom: 10px;
-}
-
-.columnButtons{
-    display:flex;
-    flex-direction: column;
-}
-
 .board-container{
     display: flex;
 }

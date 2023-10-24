@@ -1,5 +1,7 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import * as DIMENSION from '../assets/constant';
+import { SquareComponent } from './square/square.component';
+import { range } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -30,5 +32,16 @@ export class AppComponent {
   decreaseWidth(): void {
     if (this.width.length - 1 >= DIMENSION.MIN_WIDTH)
       this.width = Array(this.width.length - 1);
+  }
+
+  ClearBoard(): void {
+  }
+
+  ClearObstacles(): void {
+    
+  }
+
+  Visualize(): void {
+    
   }
 }

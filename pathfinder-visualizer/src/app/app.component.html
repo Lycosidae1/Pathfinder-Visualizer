@@ -1,18 +1,27 @@
 <div class="main-container">
-  <div class="button-row">
-      <p>Modify width: </p>
-      <div class="columnButtons">
-        <button (click)="increaseWidth()">+</button>
-        <button (click)="decreaseWidth()">-</button>
-      </div>
+  <div class="navbar">
+    <button mat-raised-button [matMenuTriggerFor]="algorithm">Algorithms</button>
+    <mat-menu #algorithm="matMenu">
+      <button mat-menu-item>Dijkstra</button>
+      <button mat-menu-item>A*</button>
+    </mat-menu>
 
-      <p>Modify height: </p>
-      <div class="columnButtons">
-        <button (click)="increaseHeight()">+</button>
-        <button (click)="decreaseHeight()">-</button> 
-        </div>
-    <button>Run</button>
-  </div>
+    <button mat-raised-button [matMenuTriggerFor]="Node">Choose Node</button>
+    <mat-menu #Node="matMenu">
+      <button mat-menu-item>Start</button>
+      <button mat-menu-item>Obstacle</button>
+      <button mat-menu-item>Target</button>
+    </mat-menu>
+    <button mat-raised-button (click)="Visualize()">Visualize</button>
+    <button mat-raised-button (click)="ClearBoard()">Clear Board</button>
+    <button mat-raised-button (click)="ClearObstacles()">Clear Obstacles</button>
+
+    <button mat-raised-button [matMenuTriggerFor]="boardSizeEditor">Edit board size</button>
+    <mat-menu #boardSizeEditor="matMenu">
+      <textarea mat-menu-item type="submit" (click)="increaseHeight()">+</textarea>
+    </mat-menu>
+
+
   <div class="board-container">
     <div *ngFor="let index of width">
       <div *ngFor="let index of height">
