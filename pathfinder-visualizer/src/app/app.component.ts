@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import * as DIMENSION from '../assets/constant';
-import { SquareComponent } from './square/square.component';
-import { range } from 'rxjs';
+import { BoardService, NodeSelection } from './services/board.service';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +12,13 @@ export class AppComponent {
   width = Array(DIMENSION.BORD_WIDTH);
   height = Array(DIMENSION.BORD_HEIGHT);
   value: boolean = false;
+  selectedAlgorithm: string = "Dijkstra";
+  selectedNode: NodeSelection = NodeSelection.Obstacle;
+  NodeSelection = NodeSelection
+
+  constructor(private boardService: BoardService) {
+
+  }
 
   increaseHeight(): void {
     if (this.height.length + 1 <= DIMENSION.MAX_HEIGHT)
@@ -27,21 +33,30 @@ export class AppComponent {
   increaseWidth(): void {
     if (this.width.length + 1 <= DIMENSION.MAX_WIDTH)
       this.width = Array(this.width.length + 1);
-  }
+  };
 
   decreaseWidth(): void {
     if (this.width.length - 1 >= DIMENSION.MIN_WIDTH)
       this.width = Array(this.width.length - 1);
   }
 
-  ClearBoard(): void {
+  clearBoard(): void {
+    this.boardService.clearBoard();
   }
 
-  ClearObstacles(): void {
+  clearObstacles(): void {
     
   }
 
   Visualize(): void {
     
+  }
+
+  onNodeChange(): void {
+    this.boardService.changeNodeSelection(this.selectedNode);
+  }
+
+  onAlgorithmChange(): void {
+
   }
 }
