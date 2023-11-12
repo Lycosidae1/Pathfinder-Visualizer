@@ -24,6 +24,7 @@ export class SquareComponent implements OnInit {
     });
     this.boardService.clearBoardEvent.asObservable().subscribe(() => {
       this.applyNeutralColor();
+      this.boardService.unlockStartPosition();
     })
     this.boardService.nodeSelection.asObservable().subscribe((selection) => {
       this.nodeSelection = selection
@@ -44,11 +45,8 @@ export class SquareComponent implements OnInit {
   }
 
   onClick(e:any): void {
-    if(this.nodeSelection === NodeSelection.Obstacle) this.color();
-    else if(this.nodeSelection === NodeSelection.Start && !this.startPositionLocked) {
-      this.start(); 
-      this.boardService.lockStartPosition();
-    }   
+    if(this.nodeSelection === NodeSelection.Obstacle) this.handleObstacle();
+    else if(this.nodeSelection === NodeSelection.Start ) this.handleStartPosition();
   }
 
   start(): void {
@@ -88,7 +86,7 @@ export class SquareComponent implements OnInit {
     }
   }
 
-  color(): void {
+  handleObstacle(): void {
     if(this.currentStyles['background-color'] === 'black') {
       this.applyNeutralColor();
       this.state = !this.state;
@@ -96,6 +94,17 @@ export class SquareComponent implements OnInit {
     else {
       this.applyColor();
     }
+  }
+
+  handleStartPosition(): void {
+    if(!this.startPositionLocked) {
+      this.start(); 
+      this.boardService.lockStartPosition();
+    }
+    else if(this.currentStyles['background-color'] === 'green'){
+      this.applyNeutralColor();
+      this.boardService.unlockStartPosition();
+    }  
   }
 
 }

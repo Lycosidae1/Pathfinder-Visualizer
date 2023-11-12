@@ -27,4 +27,8 @@ export class BoardService {
   lockStartPosition(): void {
     this.startPositionIsSet.next(true);
   }
+
+  unlockStartPosition(): void {
+    this.startPositionIsSet.next(false);
+  }
 }
