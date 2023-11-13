@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import * as DIMENSION from '../assets/constant';
+import * as DIMENSION from 'src/assets/constant';
 import { BoardService, NodeSelection } from './services/board.service';
 
 @Component({
@@ -45,7 +45,7 @@ export class AppComponent {
   }
 
   clearObstacles(): void {
-    
+    this.boardService.clearObstacles();
   }
 
   Visualize(): void {

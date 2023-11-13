@@ -12,12 +12,18 @@ export enum NodeSelection {
 })
 export class BoardService {
   clearBoardEvent: Subject<undefined> = new Subject();
+  clearObstaclesEvent: Subject<undefined> = new Subject();
   nodeSelection: BehaviorSubject<NodeSelection> = new BehaviorSubject<NodeSelection>(NodeSelection.Obstacle)
   startPositionIsSet: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  targetPositionIsSet: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   constructor() { }
 
   clearBoard(): void {
     this.clearBoardEvent.next(undefined);
+  }
+
+  clearObstacles(): void {
+    this.clearObstaclesEvent.next(undefined);
   }
 
   changeNodeSelection(selection: NodeSelection): void {
@@ -30,5 +36,13 @@ export class BoardService {
 
   unlockStartPosition(): void {
     this.startPositionIsSet.next(false);
+  }
+
+  lockTargetPosition(): void {
+    this.targetPositionIsSet.next(true);
+  }
+
+  unlockTargetPosition(): void {
+    this.targetPositionIsSet.next(false);
   }
 }
