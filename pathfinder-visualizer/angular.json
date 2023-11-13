@@ -61,10 +61,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "pathfinder-visualizer:build:production"
+              "buildTarget": "pathfinder-visualizer:build:production"
             },
             "development": {
-              "browserTarget": "pathfinder-visualizer:build:development"
+              "buildTarget": "pathfinder-visualizer:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -72,7 +72,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "pathfinder-visualizer:build"
+            "buildTarget": "pathfinder-visualizer:build"
           }
         },
         "test": {
