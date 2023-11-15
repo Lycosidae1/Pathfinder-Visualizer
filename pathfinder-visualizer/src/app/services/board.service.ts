@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { SquareComponent } from '../components/square/square.component';
 
 export enum NodeSelection {
   Start = 0,

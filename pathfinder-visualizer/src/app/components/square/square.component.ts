@@ -14,7 +14,6 @@ export class SquareComponent implements OnInit {
   private nodeSelection!: NodeSelection;
   private startPositionLocked!: boolean
   private targetPositionLocked!: boolean
-  private squareBlocked!: boolean;
   currentStyles!: {[klass: string]: any; };
 
   constructor(private mouseService: MouseService, private boardService: BoardService){
@@ -102,11 +101,9 @@ export class SquareComponent implements OnInit {
     if(this.currentStyles['background-color'] === 'black') {
       this.applyNeutralColor();
       this.state = !this.state;
-      this.squareBlocked = false;
     }
     else {
       this.applyColor();
-      this.squareBlocked = true;
     }
   }
 

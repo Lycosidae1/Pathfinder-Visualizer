@@ -21,10 +21,8 @@
       <button mat-raised-button (click)="clearBoard()">Clear Board</button>
       <button mat-raised-button (click)="clearObstacles()">Clear Obstacles</button>
 
-      <button mat-raised-button [matMenuTriggerFor]="boardSizeEditor">Edit board size</button>
-      <mat-menu #boardSizeEditor="matMenu">
-        <textarea mat-menu-item type="submit" (click)="increaseHeight()">+</textarea>
-      </mat-menu>
+      <input matInput class="sizeController" type="number" placeholder="Edit Width 5 - 30" [min]="5" [max]="30" (input)="modifyWidth($event)">
+      <input matInput class="sizeController" type="number" placeholder="Edit Height 5 - 20" [min]="5" [max]="20" (input)="modifyHeight($event)">
   </div>
 
   <div class="board-container">

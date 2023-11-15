@@ -20,24 +20,29 @@ export class AppComponent {
 
   }
 
-  increaseHeight(): void {
-    if (this.height.length + 1 <= DIMENSION.MAX_HEIGHT)
-      this.height = Array(this.height.length + 1);
+  modifyHeight(event: any): void {
+    try {
+      const newHeight = parseInt(event.target.value);
+      if (newHeight > DIMENSION.MAX_HEIGHT) this.height = Array(DIMENSION.MAX_HEIGHT);
+      else if (newHeight < DIMENSION.MIN_HEIGHT) this.height = Array(DIMENSION.MIN_HEIGHT);
+      else this.height = Array(newHeight);
+    }
+    catch(err) {
+      this.height = Array(10);
+    }
+    
   }
 
-  decreaseHeight(): void {
-    if (this.height.length - 1 >= DIMENSION.MIN_HEIGHT)
-      this.height = Array(this.height.length - 1);
-  }
-
-  increaseWidth(): void {
-    if (this.width.length + 1 <= DIMENSION.MAX_WIDTH)
-      this.width = Array(this.width.length + 1);
-  };
-
-  decreaseWidth(): void {
-    if (this.width.length - 1 >= DIMENSION.MIN_WIDTH)
-      this.width = Array(this.width.length - 1);
+  modifyWidth(event: any): void {
+    try {
+      const newWidth = parseInt(event.target.value);
+      if (newWidth > DIMENSION.MAX_WIDTH) this.width = Array(DIMENSION.MAX_WIDTH);
+      else if (newWidth < DIMENSION.MIN_WIDTH) this.width = Array(DIMENSION.MIN_WIDTH);
+      else this.width = Array(newWidth);
+    }
+    catch(err) {
+      this.width = Array(20);
+    }
   }
 
   clearBoard(): void {
