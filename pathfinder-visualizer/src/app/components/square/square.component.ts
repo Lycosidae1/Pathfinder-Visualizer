@@ -1,8 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { MouseService, MouseState } from '../../services/mouse-service.service';
 import { BoardService, NodeSelection } from 'src/app/services/board.service';
-import { Obstacles, START_POSITION_COLOR, TARGET_POSITION_COLOR, OBSTACLE_POSITION_COLOR, NEUTRAL_COLOR, SHORTEST_PATH_COLOR } from 'src/assets/constant';
-import { GraphService } from 'src/app/services/graph.service';
+import { Obstacles, SHORTEST_PATH_COLOR } from 'src/assets/constant';
 
 @Component({
   selector: 'app-square',
@@ -18,11 +17,14 @@ export class SquareComponent implements OnInit {
   currentStyles!: {[klass: string]: any; };
   @Input() squareID!: string;
 
-  constructor(private mouseService: MouseService, private boardService: BoardService, private graphService: GraphService){
-    this.applyNeutralColor();
-  };
+  constructor(private mouseService: MouseService, private boardService: BoardService) {};
 
   ngOnInit(): void {
+    this.handleSubscriptions();
+    this.applyNeutralColor();
+  }
+
+  handleSubscriptions(): void {
     this.mouseService.mouseState.asObservable().subscribe((state) => {
       this.mouseState = state;
     });
@@ -36,16 +38,9 @@ export class SquareComponent implements OnInit {
         this.applyNeutralColor();
       }
     })
-    this.boardService.clearShortestPathEvent.asObservable().subscribe(() => {
-      if (this.currentStyles['background-color'] == SHORTEST_PATH_COLOR) {
-        this.applyNeutralColor();
-        this.boardService.unlockStartPosition();
-        this.boardService.unlockTargetPosition();
-      }
-    })
     this.boardService.nodeSelection.asObservable().subscribe((selection) => {
       this.nodeSelection = selection
-    })
+    });
     this.boardService.startPositionIsSet.asObservable().subscribe((value) => {
       this.startPositionLocked = value;
     })
@@ -63,7 +58,7 @@ export class SquareComponent implements OnInit {
     }
   }
 
-  onClick(e:any): void {
+  onClick(): void {
     if(this.nodeSelection === NodeSelection.Obstacle) this.handleObstacle();
     else if(this.nodeSelection === NodeSelection.Start ) this.handleStartPosition();
     else if(this.nodeSelection === NodeSelection.Target ) this.handleTargetPosition();
@@ -71,7 +66,7 @@ export class SquareComponent implements OnInit {
 
   start(): void {
     this.currentStyles = {
-      'background-color': START_POSITION_COLOR,
+      'background-color': 'green',
     }
   }
 
@@ -79,10 +74,8 @@ export class SquareComponent implements OnInit {
     if(this.nodeSelection === NodeSelection.Obstacle) {
       if(this.mouseState == MouseState.DOWN) {
         this.applyColor();
-        this.state = !this.state;
       }
     }
-
   }
 
   startSelection(): void {
@@ -96,20 +89,21 @@ export class SquareComponent implements OnInit {
 
   applyColor(): void {
     this.currentStyles = {
-      'background-color': OBSTACLE_POSITION_COLOR,
+      'background-color': 'black',
     }
+    this.state = !this.state;
   }
 
   applyNeutralColor(): void {
     this.currentStyles = {
-      'background-color': NEUTRAL_COLOR,
+      'background-color': 'white',
     }
+    this.state= !this.state;
   }
 
   handleObstacle(): void {
-    if(this.currentStyles['background-color'] === OBSTACLE_POSITION_COLOR) {
+    if(this.currentStyles['background-color'] === 'black') {
       this.applyNeutralColor();
-      this.state = !this.state;
     }
     else {
       this.applyColor();
@@ -121,7 +115,7 @@ export class SquareComponent implements OnInit {
       this.start(); 
       this.boardService.lockStartPosition();
     }
-    else if(this.currentStyles['background-color'] === START_POSITION_COLOR){
+    else if(this.currentStyles['background-color'] === 'green'){
       this.applyNeutralColor();
       this.boardService.unlockStartPosition();
     }  
@@ -133,7 +127,7 @@ export class SquareComponent implements OnInit {
       this.boardService.lockTargetPosition();
     }
 
-    else if (this.currentStyles['background-color'] === TARGET_POSITION_COLOR) {
+    else if (this.currentStyles['background-color'] === 'red') {
       this.applyNeutralColor();
       this.boardService.unlockTargetPosition();
     }
@@ -141,10 +135,9 @@ export class SquareComponent implements OnInit {
 
   setTarget(): void {
     this.currentStyles = {
-      'background-color': TARGET_POSITION_COLOR,
+      'background-color': 'red',
     }
   }
-
   setShortestPath(): void {
     this.currentStyles = {
       'background-color': SHORTEST_PATH_COLOR,
