@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { SquareComponent } from '../components/square/square.component';
 
 export enum NodeSelection {
   Start = 0,
@@ -14,10 +13,11 @@ export enum NodeSelection {
 export class BoardService {
   clearBoardEvent: Subject<undefined> = new Subject();
   clearObstaclesEvent: Subject<undefined> = new Subject();
+  clearShortestPathEvent: Subject<undefined> = new Subject();
   nodeSelection: BehaviorSubject<NodeSelection> = new BehaviorSubject<NodeSelection>(NodeSelection.Obstacle)
   startPositionIsSet: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   targetPositionIsSet: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  constructor() { }
+  constructor() {   }
 
   clearBoard(): void {
     this.clearBoardEvent.next(undefined);
@@ -25,6 +25,10 @@ export class BoardService {
 
   clearObstacles(): void {
     this.clearObstaclesEvent.next(undefined);
+  }
+
+  clearShortestPath() {
+    this.clearShortestPathEvent.next(undefined);
   }
 
   changeNodeSelection(selection: NodeSelection): void {

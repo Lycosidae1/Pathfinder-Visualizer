@@ -10,3 +10,9 @@ export const MIN_HEIGHT = 5;
 export const Obstacles = [
     'black',
 ]
+
+export const START_POSITION_COLOR = 'green';
+export const TARGET_POSITION_COLOR = 'red';
+export const OBSTACLE_POSITION_COLOR = 'black';
+export const NEUTRAL_COLOR = 'white';
+export const SHORTEST_PATH_COLOR = 'lightblue';

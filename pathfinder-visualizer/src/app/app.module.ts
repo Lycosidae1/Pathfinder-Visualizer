@@ -7,6 +7,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { AppComponent } from './app.component';
 import { SquareComponent } from './components/square/square.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { GraphService } from './services/graph.service';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -19,10 +21,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatMenuModule,
     MatButtonModule,
     MatSelectModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+    }),
   ],
 
-  providers: [],
+  providers: [GraphService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
