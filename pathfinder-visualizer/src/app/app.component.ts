@@ -3,6 +3,8 @@ import * as DIMENSION from 'src/assets/constant';
 import { BoardService, NodeSelection } from './services/board.service';
 import { GraphService } from './services/graph.service';
 import { SquareComponent } from './components/square/square.component';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faBullseye } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +20,8 @@ export class AppComponent implements AfterViewInit {
   selectedAlgorithm: string = "Dijkstra";
   selectedNode: NodeSelection = NodeSelection.Obstacle;
   NodeSelection = NodeSelection
+  faArrow = faPlay;
+  faTarget = faBullseye;
 
   constructor(private boardService: BoardService, private graphService: GraphService) {}
 

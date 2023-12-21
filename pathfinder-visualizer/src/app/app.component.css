@@ -22,3 +22,54 @@
     min-width: 120px;
 }
 
+.legend {
+    display: flex;
+    justify-content: center;
+
+    li {
+        display: inline;
+        padding: 0 28px 0 0;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 18px;
+        font-weight: bold ;
+        color: #34495e;   
+    }
+}
+
+ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+    margin-bottom: 15px;
+}
+
+.node {
+    border: 1px solid lightblue;
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    position: relative;
+    top: 0.35em;
+    margin: 0 0.42em;
+}
+
+.unvisited {
+    background-color: white;
+}
+
+.visited {
+    background-color: purple;
+
+}
+
+.shortest-path {
+    background-color: yellow;
+}
+
+.wall {
+    background-color: black;
+}

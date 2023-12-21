@@ -1,5 +1,7 @@
+<script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
 <div class="main-container">
   <div class="navbar-container">
+    <div class="toolbar">
       <mat-form-field>
         <mat-label>Algorithms</mat-label>
         <mat-select [(value)]="selectedAlgorithm" (selectionChange)="onAlgorithmChange()">
@@ -25,8 +27,38 @@
 
       <input matInput class="sizeController" type="number" placeholder="Edit Width 5 - 30" [min]="5" [max]="30" (input)="modifyWidth($event)">
       <input matInput class="sizeController" type="number" placeholder="Edit Height 5 - 20" [min]="5" [max]="20" (input)="modifyHeight($event)">
+    </div>
   </div>
 
+  <div class="legend">
+    <ul>
+      <li>
+        <fa-icon [icon]="faArrow"></fa-icon>
+        Start Node
+      </li>
+      <li>
+        <fa-icon [icon]="faTarget"></fa-icon>
+        Target Node
+      </li>
+      <li>
+        <div class="node unvisited"></div>
+        Unvisited Node
+      </li>
+      <li>
+        <div class="node visited"></div>
+        Visited Node
+      </li>
+      <li>
+        <div class="node shortest-path"></div>
+        Shortest-Path Node
+      </li>
+      <li>
+        <div class="node wall"></div>
+        Wall Node
+      </li>
+    </ul>
+  </div>
+  <i class="fa-solid fa-play"></i>
   <div class="board-container" >
     <div *ngFor="let w of width; index as posX">
       <div *ngFor="let h of height; index as posY">
