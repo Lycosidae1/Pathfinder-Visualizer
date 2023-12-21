@@ -30,7 +30,7 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.getAllSquares();
-    // this.graphService.initialPositions();
+    this.graphService.initialPositions();
   }
 
   onAlgorithmMenuClick(algorithmSelected: string): void {

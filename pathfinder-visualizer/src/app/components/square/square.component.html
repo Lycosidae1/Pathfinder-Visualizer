@@ -1,5 +1,5 @@
 <div class="square" [ngStyle]="currentStyles" (mousedown)="startSelection()" 
     (mouseover)="block()" (mouseup)="endSelection()" (click)="onClick()" (mouseleave)="firstCase()" >
-    <fa-icon [icon]="faArrow" class="symbol" *ngIf="this.showArrow"></fa-icon>
-    <fa-icon [icon]="faTarget" class="symbol" *ngIf="this.showTarget"></fa-icon>
+        <fa-icon [icon]="faArrow" class="symbol" *ngIf="this.showArrow"></fa-icon>
+        <fa-icon [icon]="faTarget" class="symbol" *ngIf="this.showTarget"></fa-icon>
 </div>
