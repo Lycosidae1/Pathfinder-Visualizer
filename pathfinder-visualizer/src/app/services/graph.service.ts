@@ -1,4 +1,4 @@
-import { Injectable, QueryList } from '@angular/core';
+import { AfterViewInit, Injectable, QueryList } from '@angular/core';
 import { SquareComponent } from '../components/square/square.component';
 import * as CONSTANTS from 'src/assets/constant';
 import { DijkstraCalculator } from 'dijkstra-calculator';
@@ -17,6 +17,11 @@ export class GraphService {
   constructor(private toastr: ToastrService) { 
   }
 
+  initialPositions(): void {
+    this.squares.get(1523)?.handleStartPosition();
+    this.squares.get(2523)?.handleTargetPosition();
+  }
+
   public set setWidth(width : number) {
     this.width = width;
   }
@@ -27,6 +32,11 @@ export class GraphService {
 
   public set setGridSquares(squares : QueryList<SquareComponent>) {
     this.squares = squares;
+  }
+
+  dijkstra(): void {
+    this.updateVertices();
+    this.visualize();
   }
 
   updateVertices(): void {
@@ -64,8 +74,8 @@ export class GraphService {
   visualize(): void {
     this.graph = new DijkstraCalculator();
     this.updateVertices();
-    let startPosition = this.squares.find(currentSquare => currentSquare.currentStyles['background-color'] == CONSTANTS.START_POSITION_COLOR)?.squareID;
-    let targetPosition = this.squares.find(currentSquare => currentSquare.currentStyles['background-color'] == CONSTANTS.TARGET_POSITION_COLOR)?.squareID;
+    let startPosition = this.squares.find(currentSquare => currentSquare.showArrow)?.squareID;
+    let targetPosition = this.squares.find(currentSquare => currentSquare.showTarget)?.squareID;
     if (startPosition == undefined) startPosition = "Square0";
     if (targetPosition == undefined) targetPosition = "Square1";
     let shortestPath = this.graph.calculateShortestPath(startPosition, targetPosition)

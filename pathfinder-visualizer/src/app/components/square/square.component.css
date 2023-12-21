@@ -6,3 +6,8 @@
     background-color: white;
     border: solid lightblue 1px;
 }
+
+.symbol {
+    height: 20px;
+    width: 20px;
+}

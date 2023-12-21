@@ -1,10 +1,9 @@
 import { AfterViewInit, Component, QueryList, ViewChildren } from '@angular/core';
 import * as DIMENSION from 'src/assets/constant';
 import { BoardService, NodeSelection } from './services/board.service';
-import { GraphService } from './services/graph.service';
 import { SquareComponent } from './components/square/square.component';
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
-import { faBullseye } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faBullseye } from '@fortawesome/free-solid-svg-icons';
+import { GraphService } from './services/graph.service';
 import { AlgorithmOptions } from '../assets/constant'
 import { ToastrService } from 'ngx-toastr';
 
@@ -25,13 +24,13 @@ export class AppComponent implements AfterViewInit {
   faTarget = faBullseye;
   algorithmOptions = AlgorithmOptions;
 
-
   constructor(private boardService: BoardService, 
     private graphService: GraphService,
     private toastr: ToastrService) {}
 
   ngAfterViewInit(): void {
     this.getAllSquares();
+    // this.graphService.initialPositions();
   }
 
   onAlgorithmMenuClick(algorithmSelected: string): void {
@@ -42,34 +41,6 @@ export class AppComponent implements AfterViewInit {
     this.graphService.setGridSquares = this.child;
   }
 
-  // modifyHeight(event: any): void {
-  //   try {
-  //     const newHeight = parseInt(event.target.value);
-  //     if (newHeight > DIMENSION.MAX_HEIGHT) this.height = Array(DIMENSION.MAX_HEIGHT);
-  //     else if (newHeight < DIMENSION.MIN_HEIGHT) this.height = Array(DIMENSION.MIN_HEIGHT);
-  //     else this.height = Array(newHeight);
-  //     this.getAllSquares();
-  //     this.graphService.setHeight = newHeight;
-  //   }
-  //   catch(err) {
-  //     this.height = Array(10);
-  //   }
-  // }
-
-  // modifyWidth(event: any): void {
-  //   try {
-  //     const newWidth = parseInt(event.target.value);
-  //     if (newWidth > DIMENSION.MAX_WIDTH) this.width = Array(DIMENSION.MAX_WIDTH);
-  //     else if (newWidth < DIMENSION.MIN_WIDTH) this.width = Array(DIMENSION.MIN_WIDTH);
-  //     else this.width = Array(newWidth);
-  //     this.getAllSquares();
-  //     this.graphService.setWidth = newWidth;
-  //   }
-  //   catch(err) {
-  //     this.width = Array(20);
-  //   }
-  // }
-
   StartPositionSquareNumber(posX: number, posY: number): number {
     return posX * this.height.length + posY;
   }
@@ -77,7 +48,6 @@ export class AppComponent implements AfterViewInit {
   TargetPositionSquareNumber(posX: number, posY: number): number {
     return posX * this.height.length + posY;
   }
-
 
   clearBoard(): void {
     this.boardService.clearBoard();
@@ -91,15 +61,11 @@ export class AppComponent implements AfterViewInit {
     this.boardService.clearShortestPath();
   }
 
-  Visualize(): void {
+  visualize(): void {
     this.selectedAlgorithm == "" ? this.toastr.error("You haven't selected an algorithm!") : this.graphService.visualize();
   }
 
   onNodeChange(): void {
     this.boardService.changeNodeSelection(this.selectedNode);
-  }
-
-  onAlgorithmChange(): void {
-
   }
 }

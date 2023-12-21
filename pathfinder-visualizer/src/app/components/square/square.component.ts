@@ -1,7 +1,15 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { MouseService, MouseState } from '../../services/mouse-service.service';
 import { BoardService, NodeSelection } from 'src/app/services/board.service';
+import { Component, OnInit, Input } from '@angular/core';
 import { Obstacles, SHORTEST_PATH_COLOR } from 'src/assets/constant';
+import { faPlay, faBullseye } from '@fortawesome/free-solid-svg-icons';
+
+enum SquareState {
+  CLEAR = 0,
+  BLOCKED = 1,
+  START = 2,
+  TARGET = 3,
+}
 
 @Component({
   selector: 'app-square',
@@ -9,18 +17,20 @@ import { Obstacles, SHORTEST_PATH_COLOR } from 'src/assets/constant';
   styleUrls: ['./square.component.css']
 })
 export class SquareComponent implements OnInit {
-  private state!: boolean;
-  private mouseState!: MouseState;
-  private nodeSelection!: NodeSelection;
-  private startPositionLocked!: boolean
-  private targetPositionLocked!: boolean
-  currentStyles!: {[klass: string]: any; };
   @Input() squareID!: string;
+  private state!: SquareState;
+  private mouseState!: MouseState;
+  currentStyles!: {[klass: string]: any; };
+  faArrow = faPlay;
+  faTarget = faBullseye;
+  showArrow = false;  
+  showTarget = false;
 
   constructor(private mouseService: MouseService, private boardService: BoardService) {};
 
   ngOnInit(): void {
     this.handleSubscriptions();
+    this.state = SquareState.CLEAR;
     this.applyNeutralColor();
   }
 
@@ -30,114 +40,74 @@ export class SquareComponent implements OnInit {
     });
     this.boardService.clearBoardEvent.asObservable().subscribe(() => {
       this.applyNeutralColor();
-      this.boardService.unlockStartPosition();
-      this.boardService.unlockTargetPosition();
     })
     this.boardService.clearObstaclesEvent.asObservable().subscribe(() => {
-      if (Obstacles.includes(this.currentStyles['background-color'])) {
+      if (this.state = SquareState.BLOCKED) {
         this.applyNeutralColor();
       }
-    })
-    this.boardService.nodeSelection.asObservable().subscribe((selection) => {
-      this.nodeSelection = selection
-    });
-    this.boardService.startPositionIsSet.asObservable().subscribe((value) => {
-      this.startPositionLocked = value;
-    })
-    this.boardService.targetPositionIsSet.asObservable().subscribe((value) => {
-      this.targetPositionLocked = value;
     })
   }
 
   block(): void {
-    if(this.nodeSelection === NodeSelection.Obstacle) {
-        if(this.mouseState == MouseState.DOWN) {
-        this.applyColor();
-        this.state = !this.state;
-      }
+    if(this.mouseState == MouseState.DOWN) {
+      this.state = SquareState.BLOCKED;
+      this.applyBlackColor();
     }
   }
 
   onClick(): void {
-    if(this.nodeSelection === NodeSelection.Obstacle) this.handleObstacle();
-    else if(this.nodeSelection === NodeSelection.Start ) this.handleStartPosition();
-    else if(this.nodeSelection === NodeSelection.Target ) this.handleTargetPosition();
-  }
-
-  start(): void {
-    this.currentStyles = {
-      'background-color': 'green',
-    }
+    this.handleObstacle();
   }
 
   firstCase(): void {
-    if(this.nodeSelection === NodeSelection.Obstacle) {
-      if(this.mouseState == MouseState.DOWN) {
-        this.applyColor();
-      }
+    if(this.mouseState == MouseState.DOWN) {
+      this.state = SquareState.START;
+      this.applyBlackColor();
     }
   }
 
   startSelection(): void {
-    if(this.nodeSelection === NodeSelection.Obstacle)
-      this.mouseService.mouseDown();
+    this.mouseService.mouseDown();
   }
 
   endSelection(): void {
     this.mouseService.mouseUp();
   }
 
-  applyColor(): void {
+  applyBlackColor(): void {
     this.currentStyles = {
       'background-color': 'black',
+      'transition': 'width 0.5s'
     }
-    this.state = !this.state;
   }
 
   applyNeutralColor(): void {
     this.currentStyles = {
       'background-color': 'white',
     }
-    this.state= !this.state;
   }
 
   handleObstacle(): void {
-    if(this.currentStyles['background-color'] === 'black') {
+    console.log(this.showArrow);
+    console.log(this.showTarget);
+
+    if(this.state = SquareState.BLOCKED) {
       this.applyNeutralColor();
     }
-    else {
-      this.applyColor();
+    else if (!this.showArrow && !this.showTarget){
+      console.log("dooge")
+      this.applyBlackColor();
     }
   }
 
   handleStartPosition(): void {
-    if(!this.startPositionLocked) {
-      this.start(); 
-      this.boardService.lockStartPosition();
-    }
-    else if(this.currentStyles['background-color'] === 'green'){
-      this.applyNeutralColor();
-      this.boardService.unlockStartPosition();
-    }  
+    this.showArrow = !this.showArrow;
   }
 
   handleTargetPosition(): void {
-    if(!this.targetPositionLocked) {
-      this.setTarget();
-      this.boardService.lockTargetPosition();
-    }
-
-    else if (this.currentStyles['background-color'] === 'red') {
-      this.applyNeutralColor();
-      this.boardService.unlockTargetPosition();
-    }
+    this.showTarget = !this.showTarget;
   }
 
-  setTarget(): void {
-    this.currentStyles = {
-      'background-color': 'red',
-    }
-  }
   setShortestPath(): void {
     this.currentStyles = {
       'background-color': SHORTEST_PATH_COLOR,
