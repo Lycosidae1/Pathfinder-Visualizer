@@ -9,6 +9,7 @@ import { SquareComponent } from './components/square/square.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GraphService } from './services/graph.service';
 import { ToastrModule } from 'ngx-toastr';
+import { MatIconModule } from '@angular/material/icon'
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ToastrModule } from 'ngx-toastr';
   ],
   imports: [
     BrowserModule,
+    MatIconModule,
     AppRoutingModule,
     MatMenuModule,
     MatButtonModule,

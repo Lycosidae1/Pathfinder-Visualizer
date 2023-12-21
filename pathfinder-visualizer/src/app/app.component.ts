@@ -3,6 +3,8 @@ import * as DIMENSION from 'src/assets/constant';
 import { BoardService, NodeSelection } from './services/board.service';
 import { GraphService } from './services/graph.service';
 import { SquareComponent } from './components/square/square.component';
+import { AlgorithmOptions } from '../assets/constant'
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -11,57 +13,67 @@ import { SquareComponent } from './components/square/square.component';
 })
 export class AppComponent implements AfterViewInit {
   @ViewChildren(SquareComponent) child!: QueryList<SquareComponent>;
-  title = 'pathfinder-visualizer';
   width = Array(DIMENSION.BORD_WIDTH);
   height = Array(DIMENSION.BORD_HEIGHT);
   value: boolean = false;
-  selectedAlgorithm: string = "Dijkstra";
+  selectedAlgorithm: string = "";
   selectedNode: NodeSelection = NodeSelection.Obstacle;
-  NodeSelection = NodeSelection
+  NodeSelection = NodeSelection;
+  algorithmOptions = AlgorithmOptions;
 
-  constructor(private boardService: BoardService, private graphService: GraphService) {}
+
+  constructor(private boardService: BoardService, 
+    private graphService: GraphService,
+    private toastr: ToastrService) {}
 
   ngAfterViewInit(): void {
     this.getAllSquares();
-    this.graphService.setWidth = this.width.length;
-    this.graphService.setHeight = this.height.length;
   }
 
-  disableVisualize(): boolean {
-    return !this.boardService.startPositionIsSet.value || !this.boardService.targetPositionIsSet.value;
+  onAlgorithmMenuClick(algorithmSelected: string): void {
+    this.selectedAlgorithm = algorithmSelected;
   }
 
   getAllSquares(): void {
     this.graphService.setGridSquares = this.child;
   }
 
-  modifyHeight(event: any): void {
-    try {
-      const newHeight = parseInt(event.target.value);
-      if (newHeight > DIMENSION.MAX_HEIGHT) this.height = Array(DIMENSION.MAX_HEIGHT);
-      else if (newHeight < DIMENSION.MIN_HEIGHT) this.height = Array(DIMENSION.MIN_HEIGHT);
-      else this.height = Array(newHeight);
-      this.getAllSquares();
-      this.graphService.setHeight = newHeight;
-    }
-    catch(err) {
-      this.height = Array(10);
-    }
+  // modifyHeight(event: any): void {
+  //   try {
+  //     const newHeight = parseInt(event.target.value);
+  //     if (newHeight > DIMENSION.MAX_HEIGHT) this.height = Array(DIMENSION.MAX_HEIGHT);
+  //     else if (newHeight < DIMENSION.MIN_HEIGHT) this.height = Array(DIMENSION.MIN_HEIGHT);
+  //     else this.height = Array(newHeight);
+  //     this.getAllSquares();
+  //     this.graphService.setHeight = newHeight;
+  //   }
+  //   catch(err) {
+  //     this.height = Array(10);
+  //   }
+  // }
+
+  // modifyWidth(event: any): void {
+  //   try {
+  //     const newWidth = parseInt(event.target.value);
+  //     if (newWidth > DIMENSION.MAX_WIDTH) this.width = Array(DIMENSION.MAX_WIDTH);
+  //     else if (newWidth < DIMENSION.MIN_WIDTH) this.width = Array(DIMENSION.MIN_WIDTH);
+  //     else this.width = Array(newWidth);
+  //     this.getAllSquares();
+  //     this.graphService.setWidth = newWidth;
+  //   }
+  //   catch(err) {
+  //     this.width = Array(20);
+  //   }
+  // }
+
+  StartPositionSquareNumber(posX: number, posY: number): number {
+    return posX * this.height.length + posY;
   }
 
-  modifyWidth(event: any): void {
-    try {
-      const newWidth = parseInt(event.target.value);
-      if (newWidth > DIMENSION.MAX_WIDTH) this.width = Array(DIMENSION.MAX_WIDTH);
-      else if (newWidth < DIMENSION.MIN_WIDTH) this.width = Array(DIMENSION.MIN_WIDTH);
-      else this.width = Array(newWidth);
-      this.getAllSquares();
-      this.graphService.setWidth = newWidth;
-    }
-    catch(err) {
-      this.width = Array(20);
-    }
+  TargetPositionSquareNumber(posX: number, posY: number): number {
+    return posX * this.height.length + posY;
   }
+
 
   clearBoard(): void {
     this.boardService.clearBoard();
@@ -76,7 +88,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   Visualize(): void {
-    this.graphService.visualize();
+    this.selectedAlgorithm == "" ? this.toastr.error("You haven't selected an algorithm!") : this.graphService.visualize();
   }
 
   onNodeChange(): void {
