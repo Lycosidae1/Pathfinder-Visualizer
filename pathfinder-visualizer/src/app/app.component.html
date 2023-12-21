@@ -1,32 +1,55 @@
+<script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
 <div class="main-container">
   <div class="navbar-container">
-      <mat-form-field>
-        <mat-label>Algorithms</mat-label>
-        <mat-select [(value)]="selectedAlgorithm" (selectionChange)="onAlgorithmChange()">
-          <mat-option value="Dijkstra">Dijkstra</mat-option>
-          <mat-option value="A*">A*</mat-option>
-        </mat-select>
-      </mat-form-field>
+    <div class="title">
+      <p>Pathfinder Visualizer</p>
+    </div>
+    <div class="toolbox">
+      <button mat-button [matMenuTriggerFor]="algorithmMenu" class="button" color="primary">
+        Algorithms <mat-icon iconPositionEnd>arrow_drop_down</mat-icon> 
+      </button>
+      <mat-menu #algorithmMenu="matMenu" >
+        <button (click)="onAlgorithmMenuClick(option)" *ngFor="let option of algorithmOptions" mat-menu-item>
+          {{option}}
+        </button>
+      </mat-menu>
 
-      <mat-form-field>
-        <mat-label>Choose Node</mat-label>
-        <mat-select [(value)]="selectedNode" (selectionChange)="onNodeChange()">
-          <mat-option [value]="NodeSelection.Start">Start</mat-option>
-          <mat-option [value]="NodeSelection.Obstacle">Obstacle</mat-option>
-          <mat-option [value]="NodeSelection.Target">Target</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <button mat-raised-button (click)="Visualize()" [disabled]="this.disableVisualize()">Visualize</button>
-      <button mat-raised-button (click)="clearBoard()">Clear Board</button>
-      <button mat-raised-button (click)="clearObstacles()">Clear Obstacles</button>
-      <button mat-raised-button (click)="clearShortestPath()">Clear Path</button>
-
-
-      <input matInput class="sizeController" type="number" placeholder="Edit Width 5 - 30" [min]="5" [max]="30" (input)="modifyWidth($event)">
-      <input matInput class="sizeController" type="number" placeholder="Edit Height 5 - 20" [min]="5" [max]="20" (input)="modifyHeight($event)">
+      <button mat-button (click)="Visualize()" class="visualize-button">Visualize {{ this.selectedAlgorithm }}</button>
+      <button mat-button (click)="clearObstacles()" class="button">Clear Obstacles</button>
+      <button mat-button (click)="clearShortestPath()" class="button">Clear Path</button>
+      <button mat-button (click)="clearBoard()" class="button">Clear Board</button>
+    </div>   
   </div>
 
+  <div class="legend">
+    <ul>
+      <li>
+        <fa-icon [icon]="faArrow"></fa-icon>
+        Start Node
+      </li>
+      <li>
+        <fa-icon [icon]="faTarget"></fa-icon>
+        Target Node
+      </li>
+      <li>
+        <div class="node unvisited"></div>
+        Unvisited Node
+      </li>
+      <li>
+        <div class="node visited"></div>
+        Visited Node
+      </li>
+      <li>
+        <div class="node shortest-path"></div>
+        Shortest-Path Node
+      </li>
+      <li>
+        <div class="node wall"></div>
+        Wall Node
+      </li>
+    </ul>
+  </div>
+  <i class="fa-solid fa-play"></i>
   <div class="board-container" >
     <div *ngFor="let w of width; index as posX">
       <div *ngFor="let h of height; index as posY">
