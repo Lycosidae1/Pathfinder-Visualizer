@@ -30,8 +30,7 @@ export class SquareComponent implements OnInit {
 
   ngOnInit(): void {
     this.handleSubscriptions();
-    this.state = SquareState.CLEAR;
-    this.applyNeutralColor();
+    this.free();
   }
 
   handleSubscriptions(): void {
@@ -39,39 +38,44 @@ export class SquareComponent implements OnInit {
       this.mouseState = state;
     });
     this.boardService.clearBoardEvent.asObservable().subscribe(() => {
-      this.applyNeutralColor();
+      this.free();
     })
     this.boardService.clearObstaclesEvent.asObservable().subscribe(() => {
-      if (this.state = SquareState.BLOCKED) {
-        this.applyNeutralColor();
-      }
+      if (this.state = SquareState.BLOCKED) this.free();
     })
+  }
+
+  onMouseUp(): void {
+    if(this.state == SquareState.CLEAR) this.block();
+    else if(this.state = SquareState.BLOCKED) {
+      if(this.mouseState == MouseState.UP) {  // You are not currently holding the mouse in order to add a wall.
+        this.free();
+      }
+    }
+    this.mouseService.mouseUp();
+  }
+
+  onMouseDown(): void {
+    if(this.state == SquareState.CLEAR) this.startSelection();
+  }
+
+  onMouseOver(): void {
+    if(this.mouseState == MouseState.DOWN) this.block();
   }
 
   block(): void {
-    if(this.mouseState == MouseState.DOWN) {
-      this.state = SquareState.BLOCKED;
-      this.applyBlackColor();
-    }
+    this.state = SquareState.BLOCKED;
+    this.applyBlackColor();
   }
 
-  onClick(): void {
-    this.handleObstacle();
-  }
-
-  firstCase(): void {
-    if(this.mouseState == MouseState.DOWN) {
-      this.state = SquareState.START;
-      this.applyBlackColor();
-    }
+  free(): void {
+    this.state = SquareState.CLEAR;
+    this.applyNeutralColor();
   }
 
   startSelection(): void {
     this.mouseService.mouseDown();
-  }
-
-  endSelection(): void {
-    this.mouseService.mouseUp();
+    this.block();
   }
 
   applyBlackColor(): void {
@@ -84,19 +88,6 @@ export class SquareComponent implements OnInit {
   applyNeutralColor(): void {
     this.currentStyles = {
       'background-color': 'white',
-    }
-  }
-
-  handleObstacle(): void {
-    console.log(this.showArrow);
-    console.log(this.showTarget);
-
-    if(this.state = SquareState.BLOCKED) {
-      this.applyNeutralColor();
-    }
-    else if (!this.showArrow && !this.showTarget){
-      console.log("dooge")
-      this.applyBlackColor();
     }
   }
 
