@@ -6,20 +6,50 @@
 
 .board-container{
     display: flex;
-    align-self: center;
-    margin-top: 8%;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width:100%;
+    height: 80%;
 }
 
 .navbar-container {
     display: flex;
-    width: 100%;
-    justify-content: space-evenly;
-    background-color: purple;
-    align-items: baseline;
+    height: 5%;
+    background-color: #34495E;
 }
 
-.sizeController {
-    min-width: 120px;
+.title {
+    display: flex;
+    align-self: center;
+    color: white;
+    width: 20%;
+    font-size: 35px;
+    p {
+        margin-bottom: 0px;
+        margin-left: 10px;
+    }
+    :hover{
+        color: rgb(63, 162, 63) !important;
+        cursor: pointer;
+    }
+}
+
+.toolbox{
+    display: flex;
+    justify-content: space-evenly;
+    align-self: center;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+.button{
+    color: white !important;
+    font-size: 20px;
+    margin: 0px 10px 0px 10px;
+    :hover{
+        color: lightgreen !important;
+    }
+    
 }
 
 .legend {
@@ -72,4 +102,8 @@ ul {
 
 .wall {
     background-color: black;
+}
+.visualize-button{
+    background-color: lightgreen;
+    padding: 8px;
 }
