@@ -6,11 +6,19 @@ export enum MouseState {
   UP = 1,
 }
 
+export enum Item {
+  WALL = 0,
+  START = 1,
+  TARGET = 2,
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class MouseService {
   mouseState: BehaviorSubject<MouseState> = new BehaviorSubject<MouseState>(MouseState.UP);
+  itemState: BehaviorSubject<Item> = new BehaviorSubject<Item>(Item.WALL);
+
   constructor() { }
 
   mouseDown(): void {
@@ -19,6 +27,14 @@ export class MouseService {
 
   mouseUp(): void {
     this.mouseState.next(MouseState.UP);
+  }
+
+  changeStartPosition(): void {
+    this.itemState.next(Item.START);
+  }
+
+  addBlockItemState(): void {
+    this.itemState.next(Item.WALL);
   }
 
 }
