@@ -94,6 +94,9 @@ export class SquareComponent implements OnInit {
       this.mouseService.addBlockItemState()
       this.block();
     }
+    if(this.item == Item.CLEAR){
+      this.free()
+    }
     this.mouseService.mouseUp();
 
   }
