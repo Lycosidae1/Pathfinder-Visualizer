@@ -20,4 +20,4 @@ export const AlgorithmOptions = [
 
 export const OBSTACLE_POSITION_COLOR = 'black';
 export const NEUTRAL_COLOR = 'white';
-export const SHORTEST_PATH_COLOR = 'yellow';
+export const SHORTEST_PATH_COLOR = 'lightblue';

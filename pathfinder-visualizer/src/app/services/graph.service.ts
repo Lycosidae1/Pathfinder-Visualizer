@@ -17,11 +17,6 @@ export class GraphService {
   constructor(private toastr: ToastrService) { 
   }
 
-  initialPositions(): void {
-    this.squares.get(1523)?.handleStartPosition();
-    this.squares.get(2523)?.handleTargetPosition();
-  }
-
   public set setWidth(width : number) {
     this.width = width;
   }

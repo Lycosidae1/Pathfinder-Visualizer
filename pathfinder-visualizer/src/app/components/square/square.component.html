@@ -1,5 +1,5 @@
 <div class="square" [ngStyle]="currentStyles"
     (mousedown)="onMouseDown()" (mouseover)="onMouseOver()" (mouseup)="onMouseUp()" >
-        <fa-icon [icon]="faArrow" class="symbol" *ngIf="this.showArrow"></fa-icon>
-        <fa-icon [icon]="faTarget" class="symbol" *ngIf="this.showTarget"></fa-icon>
+        <img class="showArrow" *ngIf="this.showArrow" unselectable="on">
+        <img class="showTarget" *ngIf="this.showTarget" unselectable="on">
 </div>

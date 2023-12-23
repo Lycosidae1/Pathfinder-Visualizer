@@ -10,6 +10,7 @@ export enum Item {
   WALL = 0,
   START = 1,
   TARGET = 2,
+  CLEAR = 3,
 }
 
 @Injectable({
@@ -29,12 +30,21 @@ export class MouseService {
     this.mouseState.next(MouseState.UP);
   }
 
-  changeStartPosition(): void {
-    this.itemState.next(Item.START);
-  }
-
   addBlockItemState(): void {
     this.itemState.next(Item.WALL);
+  }
+
+  addUnblockItemState(): void {
+    this.itemState.next(Item.CLEAR);
+  }
+
+  addStartItemState(): void {
+    this.itemState.next(Item.START);
+    console.log("MService: ", this.itemState.value)
+  }
+
+  addTargetItemState(): void {
+    this.itemState.next(Item.TARGET);
   }
 
 }
