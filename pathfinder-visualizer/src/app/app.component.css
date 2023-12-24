@@ -107,3 +107,8 @@ ul {
     background-color: lightgreen;
     padding: 8px;
 }
+
+.singleSquare {
+    user-select: none;
+
+}

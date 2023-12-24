@@ -1,5 +1,5 @@
 <div class="square" [ngStyle]="currentStyles"
     (mousedown)="onMouseDown()" (mouseover)="onMouseOver()" (mouseup)="onMouseUp()" >
-        <img class="showArrow" *ngIf="this.showArrow" unselectable="on">
-        <img class="showTarget" *ngIf="this.showTarget" unselectable="on">
+        <img class="showArrow showElem" *ngIf="this.showArrow" unselectable="on">
+        <img class="showTarget showElem" *ngIf="this.showTarget" unselectable="on">
 </div>

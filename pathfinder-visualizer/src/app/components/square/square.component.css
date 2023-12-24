@@ -8,12 +8,7 @@
     z-index: 0;
 }
 
-img {
-    pointer-events: none;
-}
-
-.showArrow{
-    content: url("https://clementmihailescu.github.io/Pathfinding-Visualizer/public/styling/triangletwo-right.svg");
+.showElem {
     position: absolute;
     z-index: 10000;
     animation-duration: 2.0s;
@@ -23,17 +18,12 @@ img {
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
     animation-play-state: running;
+}
+
+.showArrow{
+    content: url("https://clementmihailescu.github.io/Pathfinding-Visualizer/public/styling/triangletwo-right.svg"); 
 }
 
 .showTarget{
     content: url("https://clementmihailescu.github.io/Pathfinding-Visualizer/public/styling/circle.svg");
-    position: absolute;
-    z-index: 10000;
-    animation-duration: 2.0s;
-    animation-timing-function: ease-out;
-    animation-delay: 0;
-    animation-direction: alternate;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-    animation-play-state: running;
 }

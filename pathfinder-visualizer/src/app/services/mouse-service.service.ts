@@ -40,11 +40,9 @@ export class MouseService {
 
   addStartItemState(): void {
     this.itemState.next(Item.START);
-    console.log("MService: ", this.itemState.value)
   }
 
   addTargetItemState(): void {
     this.itemState.next(Item.TARGET);
   }
-
 }
