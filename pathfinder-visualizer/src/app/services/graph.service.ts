@@ -3,7 +3,6 @@ import { SquareComponent } from '../components/square/square.component';
 import * as CONSTANTS from 'src/assets/constant';
 import { DijkstraCalculator } from 'dijkstra-calculator';
 import { ToastrService } from 'ngx-toastr';
-import { MouseService } from './mouse-service.service';
 
 
 @Injectable({
@@ -16,7 +15,6 @@ export class GraphService {
   private height: number = CONSTANTS.BORD_HEIGHT;
   private squares!: QueryList<SquareComponent>;
   
-
   constructor(private toastr: ToastrService) {   }
 
   public set setWidth(width : number) {

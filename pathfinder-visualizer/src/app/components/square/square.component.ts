@@ -49,13 +49,30 @@ export class SquareComponent implements OnInit {
       this.item = item;
     });
     this.boardService.clearBoardEvent.asObservable().subscribe(() => {
-      this.free();
+      if(this.showArrow) this.reinitializeStart();
+      else if (this.showTarget) this.reinitializeTarget();
+      else this.free();
     })
     this.boardService.clearShortestPathEvent.asObservable().subscribe(() => {
-      if (this.state == SquareState.SHORTESTPATH) this.free();
+      if (this.state == SquareState.SHORTESTPATH) 
+      {
+        if(this.showArrow) { 
+          this.reinitializeStart();
+        }
+        else if (this.showTarget){
+          this.reinitializeTarget();
+        }
+        else this.free();
+      }
     })
     this.boardService.clearObstaclesEvent.asObservable().subscribe(() => {
-      if (this.state = SquareState.BLOCKED) this.free();
+      if (this.state == SquareState.BLOCKED) this.free();
+      else if (this.showArrow) {
+        this.reinitializeStart();
+      }
+      else if (this.showTarget) {
+        this.reinitializeTarget();
+      }
     })
   }
 
@@ -114,6 +131,16 @@ export class SquareComponent implements OnInit {
     }
   }
 
+  reinitializeStart(): void {
+    this.state = SquareState.START;
+    this.applyNeutralColor();
+  }
+
+  reinitializeTarget(): void {
+    this.state = SquareState.TARGET;
+    this.applyNeutralColor();
+  }
+
   setStartPosition(): void {
     this.mouseService.addStartItemState();
     this.changeStartPosition();
@@ -144,7 +171,6 @@ export class SquareComponent implements OnInit {
   }
 
   block(): void {
-    // console.log("Block()");
     this.state = SquareState.BLOCKED;
     this.applyBlackColor();
   }
@@ -162,7 +188,6 @@ export class SquareComponent implements OnInit {
   applyBlackColor(): void {
     this.currentStyles = {
       'background-color': 'black',
-      'transition': 'width 0.5s'
     }
   }
 
