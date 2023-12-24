@@ -64,6 +64,7 @@ export class SquareComponent implements OnInit {
         }
         else this.free();
       }
+      document.getElementById(this.squareID)?.classList.remove("visited");
     })
     this.boardService.clearObstaclesEvent.asObservable().subscribe(() => {
       if (this.state == SquareState.BLOCKED) this.free();
@@ -208,9 +209,11 @@ export class SquareComponent implements OnInit {
   }
 
   setShortestPath(): void {
+    this.changeStartPosition();
     this.state = SquareState.SHORTESTPATH;
-    this.currentStyles = {
-      'background-color': SHORTEST_PATH_COLOR,
-    }
+    document.getElementById(this.squareID)?.classList.add("visited");
+    // this.currentStyles = {
+    //   'background-color': SHORTEST_PATH_COLOR,
+    // }
   }
 }

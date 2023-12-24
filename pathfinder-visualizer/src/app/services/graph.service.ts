@@ -1,9 +1,10 @@
-import { AfterViewInit, Injectable, QueryList } from '@angular/core';
+import { Injectable, QueryList } from '@angular/core';
 import { SquareComponent } from '../components/square/square.component';
 import * as CONSTANTS from 'src/assets/constant';
 import { DijkstraCalculator } from 'dijkstra-calculator';
 import { ToastrService } from 'ngx-toastr';
-
+import { delay } from 'src/assets/constant';
+import { BoardService } from './board.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class GraphService {
   private height: number = CONSTANTS.BORD_HEIGHT;
   private squares!: QueryList<SquareComponent>;
   
-  constructor(private toastr: ToastrService) {   }
+  constructor(private toastr: ToastrService, private boardService: BoardService) {   }
 
   public set setWidth(width : number) {
     this.width = width;
@@ -63,21 +64,31 @@ export class GraphService {
         }
       }
     }
-    console.log(this.graph.adjacencyList)
   }
 
-  visualize(): void {
+  async visualize(): Promise<void> {
+    this.clearShortestPath();
     this.graph = new DijkstraCalculator();
     this.updateVertices();
+
     let startPosition = this.squares.find(currentSquare => currentSquare.showArrow)?.squareID;
     let targetPosition = this.squares.find(currentSquare => currentSquare.showTarget)?.squareID;
+
     if (startPosition == undefined) startPosition = "Square0";
     if (targetPosition == undefined) targetPosition = "Square1";
+
     let shortestPath = this.graph.calculateShortestPath(startPosition, targetPosition)
     if (shortestPath.length == 0) this.toastr.info("There are no paths available");
     for(let i = 0; i < shortestPath.length; i++){
       let square = this.squares.find(currentSquare => currentSquare.squareID == shortestPath[i])
-      square?.setShortestPath()
+      square?.setShortestPath();
+      await CONSTANTS.delay(1);
+      square?.changeStartPosition();
+
     }
+  }
+
+  clearShortestPath(): void {
+    this.boardService.clearShortestPath();
   }
 }

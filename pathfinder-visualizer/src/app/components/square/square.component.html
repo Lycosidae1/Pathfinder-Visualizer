@@ -1,5 +1,9 @@
-<div class="square" [ngStyle]="currentStyles"
+<div class="square" id="{{this.squareID}}" [ngStyle]="currentStyles"
     (mousedown)="onMouseDown()" (mouseover)="onMouseOver()" (mouseup)="onMouseUp()" >
-        <img class="showArrow showElem" *ngIf="this.showArrow" unselectable="on">
-        <img class="showTarget showElem" *ngIf="this.showTarget" unselectable="on">
+    @if(this.showArrow){
+        <img class="showArrow showElem">
+    }
+    @if(this.showTarget){
+        <img class="showTarget showElem">
+    }
 </div>

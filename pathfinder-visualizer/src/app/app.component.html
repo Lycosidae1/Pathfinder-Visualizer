@@ -53,9 +53,9 @@
   <div class="board-container" >
     <div *ngFor="let w of width; index as posX">
       <div *ngFor="let h of height; index as posY">
-        <app-square class="singleSquare" squareID="{{'Square' + ((posX * this.height.length) + posY)}}" id="{{'Square' + ((posX * this.height.length) + posY)}}"></app-square>
+        <app-square class="singleSquare" squareID="{{'Square' + ((posX * this.height.length) + posY)}}" ></app-square>
       </div>
     </div>
   </div>  
 </div>
-  
+  <!-- id="{{'Square' + ((posX * this.height.length) + posY)}}" -->
