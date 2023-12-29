@@ -16,10 +16,7 @@ export class AppComponent implements AfterViewInit {
   @ViewChildren(SquareComponent) child!: QueryList<SquareComponent>;
   width = Array(DIMENSION.BORD_WIDTH);
   height = Array(DIMENSION.BORD_HEIGHT);
-  value: boolean = false;
   selectedAlgorithm: string = "";
-  selectedNode: NodeSelection = NodeSelection.Obstacle;
-  NodeSelection = NodeSelection
   faArrow = faPlay;
   faTarget = faBullseye;
   algorithmOptions = AlgorithmOptions;
@@ -29,25 +26,15 @@ export class AppComponent implements AfterViewInit {
     private toastr: ToastrService) {}
 
   ngAfterViewInit(): void {
-    this.getAllSquares();
+    this.setAllSquares();
   }
-
-
 
   onAlgorithmMenuClick(algorithmSelected: string): void {
     this.selectedAlgorithm = algorithmSelected;
   }
 
-  getAllSquares(): void {
+  setAllSquares(): void {
     this.graphService.setGridSquares = this.child;
-  }
-
-  StartPositionSquareNumber(posX: number, posY: number): number {
-    return posX * this.height.length + posY;
-  }
-
-  TargetPositionSquareNumber(posX: number, posY: number): number {
-    return posX * this.height.length + posY;
   }
 
   clearBoard(): void {
@@ -66,12 +53,7 @@ export class AppComponent implements AfterViewInit {
     this.selectedAlgorithm == "" ? this.toastr.error("You haven't selected an algorithm!") : this.graphService.visualize();
   }
 
-  onNodeChange(): void {
-    this.boardService.changeNodeSelection(this.selectedNode);
-  }
-
   onPreviousEvent(event: any): void {
-    console.log(event)
     if (event.eventType == "start") {
       this.setPreviouStart(event.squareID);
     }
@@ -82,12 +64,10 @@ export class AppComponent implements AfterViewInit {
   }
 
   setPreviouStart(previousSquareID: string): void {
-    let square = this.child.find(currentSquare => currentSquare.squareID == previousSquareID)
-    square?.changeStartPosition();
+    this.child.find(currentSquare => currentSquare.squareID == previousSquareID)?.changeStartPosition();
   }
 
   setPreviouTarget(previousSquareID: string): void {
-    let square = this.child.find(currentSquare => currentSquare.squareID == previousSquareID)
-    square?.changeTargetPosition();
+    this.child.find(currentSquare => currentSquare.squareID == previousSquareID)?.changeTargetPosition();
   }
 }

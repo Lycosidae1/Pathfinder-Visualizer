@@ -2,7 +2,6 @@ import { Item, MouseService } from '../../services/mouse-service.service';
 import { BoardService } from 'src/app/services/board.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SHORTEST_PATH_COLOR } from 'src/assets/constant';
-// import { faPlay, faBullseye } from '@fortawesome/free-solid-svg-icons';
 
 enum SquareState {
   CLEAR = 0,
@@ -21,7 +20,6 @@ export class SquareComponent implements OnInit {
   @Input() squareID!: string;
   @Output() setPreviousElement: EventEmitter<any> = new EventEmitter<any>();
   private squareState!: SquareState;
-  // private item!: Item;
   currentStyles!: {[klass: string]: any; };
   showArrow = false;  
   showTarget = false;
@@ -42,7 +40,7 @@ export class SquareComponent implements OnInit {
   }
 
   handleSubscriptions(): void {
-
+    //  TODO
   }
 
   onMouseDown(): void {
@@ -63,7 +61,7 @@ export class SquareComponent implements OnInit {
         this.setClearSquare();
         this.changeStartPosition();
         this.mouseService.setItemState = Item.START;
-        this.mouseService.setPreviousStart = this.squareID;
+        // this.mouseService.setPreviousStart = this.squareID;
         break;
       }
 
@@ -76,68 +74,66 @@ export class SquareComponent implements OnInit {
       }
 
       case SquareState.SHORTESTPATH: {
-        // this.setClearSquare();
-        // this.mouseService.setItemState = Item.TARGET;
+        // TODO
         break;
       }
     }  
   }
 
-  onMouseOver(): void {
+  onMouseEnter(): void {
     switch(this.mouseService.getItemState){
       case Item.OBSTACLE: {
         if(this.squareState == SquareState.START || this.squareState == SquareState.TARGET) return;
-          this.setBlockSquare();
+        this.setBlockSquare();
         break;
       }
 
-      // case Item.START: {
-      //   this.changeStartPosition();
-      //   break;
-      // }
+      case Item.START: {
+        this.changeStartPosition();
+        break;
+      }
 
-      // case Item.TARGET: {
-        
-      //   break;
-      // }
+      case Item.TARGET: {
+        this.changeTargetPosition();
+        break;
+      }
+    }  
+  }
 
-      // case Item.NO_ACTION: {
-        
-      //   break;
-      // }
+  onMouseLeave(): void {
+    switch(this.mouseService.getItemState){
+      case Item.START: {
+        this.changeStartPosition();
+        break;
+      }
+      case Item.TARGET: {
+        this.changeTargetPosition();
+        break;
+      }
     }  
   }
 
   onMouseUp(): void {
     switch(this.mouseService.getItemState){
-      // case Item.OBSTACLE: {
-      //   this.setBlockSquare();
-      //   break;
-      // }
-
       case Item.START: {
-        if(this.squareState == SquareState.BLOCKED) {
+        if(this.squareState == SquareState.BLOCKED || this.squareState == SquareState.CLEAR) {
           this.setClearSquare()
           this.changeStartPosition();
         }
         else if(this.squareState == SquareState.TARGET) {
-          let x = this.mouseService.getPreviousTarget;
-          this.setPreviousElement.emit( {eventType: "target", squareID: x });
+          this.setPreviousElement.emit( { eventType: "start", squareID: this.mouseService.getPreviousStart });
         }
         break;
       }
 
       case Item.TARGET: {
-        if(this.squareState == SquareState.BLOCKED) {
+        if(this.squareState == SquareState.BLOCKED || this.squareState == SquareState.CLEAR) {
           this.setClearSquare()
           this.changeTargetPosition();
         }
-        else if(this.squareState == SquareState.START) this.setPreviousElement.emit( {eventType: "start", squareID: this.mouseService.getPreviousStart });
-        break;
-      }
-
-      case Item.NO_ACTION: {
-        
+        else if(this.squareState == SquareState.START) {
+          this.setPreviousElement.emit( { eventType: "target", squareID: this.mouseService.getPreviousTarget });
+        }
         break;
       }
     }  
@@ -146,11 +142,12 @@ export class SquareComponent implements OnInit {
 
   changeStartPosition(): void {
     this.showArrow = !this.showArrow;
-    this.squareState = SquareState.START;
+    this.showArrow ? this.squareState = SquareState.START : this.squareState = SquareState.CLEAR;
+
   }
   changeTargetPosition(): void {
     this.showTarget = !this.showTarget;
-    this.squareState = SquareState.TARGET;
+    this.showTarget ? this.squareState = SquareState.TARGET : this.squareState = SquareState.CLEAR;
   }
 
   setBlockSquare(): void {
@@ -166,6 +163,10 @@ export class SquareComponent implements OnInit {
   setStartSquare(): void {
     this.squareState = SquareState.START;
     this.applyBlackColor();
+  }
+
+  setShortestPath(currentSquare: string): void {
+    document.getElementById(currentSquare)?.classList.add("visited");
   }
 
   applyBlackColor(): void {
