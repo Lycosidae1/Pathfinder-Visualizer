@@ -1,48 +1,45 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-
-export enum MouseState {
-  DOWN = 0,
-  UP = 1,
-}
 
 export enum Item {
-  WALL = 0,
+  OBSTACLE = 0,
   START = 1,
   TARGET = 2,
-  CLEAR = 3,
+  NO_ACTION = 3,
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class MouseService {
-  mouseState: BehaviorSubject<MouseState> = new BehaviorSubject<MouseState>(MouseState.UP);
-  itemState: BehaviorSubject<Item> = new BehaviorSubject<Item>(Item.WALL);
+  // mouseState: BehaviorSubject<MouseState> = new BehaviorSubject<MouseState>(MouseState.UP);
+  // itemState: BehaviorSubject<Item> = new BehaviorSubject<Item>(Item.WALL);
+  private itemState: Item = Item.NO_ACTION;
+  private previousStart: string = "";
+  private previousTarget: string = "";
 
   constructor() { }
 
-  mouseDown(): void {
-    this.mouseState.next(MouseState.DOWN);
+  get getItemState(): Item {
+    return this.itemState;
   }
 
-  mouseUp(): void {
-    this.mouseState.next(MouseState.UP);
+  set setItemState(currentItem: Item) {
+    this.itemState = currentItem;
   }
 
-  addBlockItemState(): void {
-    this.itemState.next(Item.WALL);
+  get getPreviousStart(): string {
+    return this.previousStart;
   }
 
-  addUnblockItemState(): void {
-    this.itemState.next(Item.CLEAR);
+  set setPreviousStart(currentStart: string) {
+    this.previousStart = currentStart;
   }
 
-  addStartItemState(): void {
-    this.itemState.next(Item.START);
+  get getPreviousTarget(): string {
+    return this.previousTarget;
   }
 
-  addTargetItemState(): void {
-    this.itemState.next(Item.TARGET);
+  set setPreviousTarget(currentTarget: string) {
+    this.previousTarget = currentTarget;
   }
 }

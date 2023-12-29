@@ -1,6 +1,6 @@
-import { Item, MouseService, MouseState } from '../../services/mouse-service.service';
+import { Item, MouseService } from '../../services/mouse-service.service';
 import { BoardService } from 'src/app/services/board.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SHORTEST_PATH_COLOR } from 'src/assets/constant';
 // import { faPlay, faBullseye } from '@fortawesome/free-solid-svg-icons';
 
@@ -19,9 +19,9 @@ enum SquareState {
 })
 export class SquareComponent implements OnInit {
   @Input() squareID!: string;
-  private state!: SquareState;
-  private mouseState!: MouseState;
-  private item!: Item;
+  @Output() setPreviousElement: EventEmitter<any> = new EventEmitter<any>();
+  private squareState!: SquareState;
+  // private item!: Item;
   currentStyles!: {[klass: string]: any; };
   showArrow = false;  
   showTarget = false;
@@ -30,160 +30,142 @@ export class SquareComponent implements OnInit {
 
   ngOnInit(): void {
     this.handleSubscriptions();
-    this.free();
+    this.setClearSquare();
     if(this.squareID == "Square1523"){
       this.showArrow = true;
-      this.state = SquareState.START;
+      this.squareState = SquareState.START;
     }
     if(this.squareID == "Square2523"){
       this.showTarget = true;
-      this.state = SquareState.TARGET;
+      this.squareState = SquareState.TARGET;
     }
   }
 
   handleSubscriptions(): void {
-    this.mouseService.mouseState.asObservable().subscribe((state) => {
-      this.mouseState = state;
-    });
-    this.mouseService.itemState.asObservable().subscribe((item) => {
-      this.item = item;
-    });
-    this.boardService.clearBoardEvent.asObservable().subscribe(() => {
-      if(this.showArrow) this.reinitializeStart();
-      else if (this.showTarget) this.reinitializeTarget();
-      else this.free();
-    })
-    this.boardService.clearShortestPathEvent.asObservable().subscribe(() => {
-      if (this.state == SquareState.SHORTESTPATH) 
-      {
-        if(this.showArrow) { 
-          this.reinitializeStart();
-        }
-        else if (this.showTarget){
-          this.reinitializeTarget();
-        }
-        else this.free();
-      }
-      document.getElementById(this.squareID)?.classList.remove("visited");
-    })
-    this.boardService.clearObstaclesEvent.asObservable().subscribe(() => {
-      if (this.state == SquareState.BLOCKED) this.free();
-      else if (this.showArrow) {
-        this.reinitializeStart();
-      }
-      else if (this.showTarget) {
-        this.reinitializeTarget();
-      }
-    })
-  }
 
-  onMouseUp(): void {
-    if(this.item == Item.START){
-      if(this.state == SquareState.TARGET) {
-        // TODO
-        return;
-      }
-      else {
-        this.state = SquareState.START;
-        this.changeStartPosition();
-        this.mouseService.addStartItemState()
-      }
-      
-    }
-    else if(this.item == Item.TARGET){
-      if(this.state == SquareState.START) return;
-      else {
-        this.state = SquareState.TARGET;
-        this.changeTargetPosition();
-        this.mouseService.addTargetItemState()
-      }
-      
-    }
-    else if(this.item == Item.WALL){
-      this.mouseService.addBlockItemState()
-      this.block();
-    }
-    else if(this.item == Item.CLEAR){
-      this.free()
-    }
-    this.mouseService.mouseUp();
   }
 
   onMouseDown(): void {
-    if(this.state == SquareState.START) {
-      this.setStartPosition();
-    }
-    else if(this.state == SquareState.TARGET) {
-      this.setTargetPosition();
-    }
-    else if (this.state == SquareState.CLEAR){
-      this.setBlock();
-    }
-    else {
-      this.setUnblock();
-    }
-    this.mouseService.mouseDown();
+    switch(this.squareState){
+      case SquareState.CLEAR: {
+        this.setBlockSquare();
+        this.mouseService.setItemState = Item.OBSTACLE;
+        break;
+      }
+
+      case SquareState.BLOCKED: {
+        this.setClearSquare();
+        this.mouseService.setItemState = Item.NO_ACTION;
+        break;
+      }
+
+      case SquareState.START: {
+        this.setClearSquare();
+        this.changeStartPosition();
+        this.mouseService.setItemState = Item.START;
+        this.mouseService.setPreviousStart = this.squareID;
+        break;
+      }
+
+      case SquareState.TARGET: {
+        this.setClearSquare();
+        this.changeTargetPosition();
+        this.mouseService.setItemState = Item.TARGET;
+        this.mouseService.setPreviousTarget = this.squareID;
+        break;
+      }
+
+      case SquareState.SHORTESTPATH: {
+        // this.setClearSquare();
+        // this.mouseService.setItemState = Item.TARGET;
+        break;
+      }
+    }  
   }
 
   onMouseOver(): void {
-    if(this.mouseState == MouseState.DOWN) {
-      if(this.state == SquareState.START || this.state == SquareState.TARGET) return;
-      else if (this.item == Item.WALL) this.block();
-    }
+    switch(this.mouseService.getItemState){
+      case Item.OBSTACLE: {
+        if(this.squareState == SquareState.START || this.squareState == SquareState.TARGET) return;
+          this.setBlockSquare();
+        break;
+      }
+
+      // case Item.START: {
+      //   this.changeStartPosition();
+      //   break;
+      // }
+
+      // case Item.TARGET: {
+        
+      //   break;
+      // }
+
+      // case Item.NO_ACTION: {
+        
+      //   break;
+      // }
+    }  
   }
 
-  reinitializeStart(): void {
-    this.state = SquareState.START;
-    this.applyNeutralColor();
-  }
+  onMouseUp(): void {
+    switch(this.mouseService.getItemState){
+      // case Item.OBSTACLE: {
+      //   this.setBlockSquare();
+      //   break;
+      // }
 
-  reinitializeTarget(): void {
-    this.state = SquareState.TARGET;
-    this.applyNeutralColor();
-  }
+      case Item.START: {
+        if(this.squareState == SquareState.BLOCKED) {
+          this.setClearSquare()
+          this.changeStartPosition();
+        }
+        else if(this.squareState == SquareState.TARGET) {
+          let x = this.mouseService.getPreviousTarget;
+          this.setPreviousElement.emit( {eventType: "target", squareID: x });
+        }
+        break;
+      }
 
-  setStartPosition(): void {
-    this.mouseService.addStartItemState();
-    this.changeStartPosition();
-    this.state = SquareState.CLEAR;
-  }
+      case Item.TARGET: {
+        if(this.squareState == SquareState.BLOCKED) {
+          this.setClearSquare()
+          this.changeTargetPosition();
+        }
+        else if(this.squareState == SquareState.START) this.setPreviousElement.emit( {eventType: "start", squareID: this.mouseService.getPreviousStart });
+        break;
+      }
 
-  setTargetPosition(): void {
-    this.mouseService.addTargetItemState();
-    this.changeTargetPosition();
-    this.state = SquareState.CLEAR;
-  }
-
-  setBlock(): void {
-    this.mouseService.addBlockItemState();
-    this.state = SquareState.BLOCKED;
-  }
-
-  setUnblock(): void {
-    this.mouseService.addUnblockItemState();
-    this.state = SquareState.CLEAR;
+      case Item.NO_ACTION: {
+        
+        break;
+      }
+    }  
+    this.mouseService.setItemState = Item.NO_ACTION;
   }
 
   changeStartPosition(): void {
     this.showArrow = !this.showArrow;
+    this.squareState = SquareState.START;
   }
   changeTargetPosition(): void {
     this.showTarget = !this.showTarget;
+    this.squareState = SquareState.TARGET;
   }
 
-  block(): void {
-    this.state = SquareState.BLOCKED;
+  setBlockSquare(): void {
+    this.squareState = SquareState.BLOCKED;
     this.applyBlackColor();
   }
 
-  free(): void {
-    this.state = SquareState.CLEAR;
+  setClearSquare(): void {
+    this.squareState = SquareState.CLEAR;
     this.applyNeutralColor();
   }
 
-  startSelection(): void {
-    this.mouseService.mouseDown();
-    this.block();
+  setStartSquare(): void {
+    this.squareState = SquareState.START;
+    this.applyBlackColor();
   }
 
   applyBlackColor(): void {
@@ -196,24 +178,5 @@ export class SquareComponent implements OnInit {
     this.currentStyles = {
       'background-color': 'white',
     }
-  }
-
-  handleStartPosition(): void {
-    this.showArrow = !this.showArrow;
-    this.state = SquareState.START;
-  }
-
-  handleTargetPosition(): void {
-    this.showTarget = !this.showTarget;
-    this.state = SquareState.TARGET;
-  }
-
-  setShortestPath(): void {
-    this.changeStartPosition();
-    this.state = SquareState.SHORTESTPATH;
-    document.getElementById(this.squareID)?.classList.add("visited");
-    // this.currentStyles = {
-    //   'background-color': SHORTEST_PATH_COLOR,
-    // }
   }
 }

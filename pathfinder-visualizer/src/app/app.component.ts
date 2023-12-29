@@ -23,7 +23,7 @@ export class AppComponent implements AfterViewInit {
   faArrow = faPlay;
   faTarget = faBullseye;
   algorithmOptions = AlgorithmOptions;
-
+  
   constructor(private boardService: BoardService, 
     private graphService: GraphService,
     private toastr: ToastrService) {}
@@ -31,6 +31,8 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.getAllSquares();
   }
+
+
 
   onAlgorithmMenuClick(algorithmSelected: string): void {
     this.selectedAlgorithm = algorithmSelected;
@@ -66,5 +68,26 @@ export class AppComponent implements AfterViewInit {
 
   onNodeChange(): void {
     this.boardService.changeNodeSelection(this.selectedNode);
+  }
+
+  onPreviousEvent(event: any): void {
+    console.log(event)
+    if (event.eventType == "start") {
+      this.setPreviouStart(event.squareID);
+    }
+
+    else if (event.eventType == "target") {
+      this.setPreviouTarget(event.squareID);
+    }
+  }
+
+  setPreviouStart(previousSquareID: string): void {
+    let square = this.child.find(currentSquare => currentSquare.squareID == previousSquareID)
+    square?.changeStartPosition();
+  }
+
+  setPreviouTarget(previousSquareID: string): void {
+    let square = this.child.find(currentSquare => currentSquare.squareID == previousSquareID)
+    square?.changeTargetPosition();
   }
 }

@@ -67,25 +67,25 @@ export class GraphService {
   }
 
   async visualize(): Promise<void> {
-    this.clearShortestPath();
-    this.graph = new DijkstraCalculator();
-    this.updateVertices();
+    // this.clearShortestPath();
+    // this.graph = new DijkstraCalculator();
+    // this.updateVertices();
 
-    let startPosition = this.squares.find(currentSquare => currentSquare.showArrow)?.squareID;
-    let targetPosition = this.squares.find(currentSquare => currentSquare.showTarget)?.squareID;
+    // let startPosition = this.squares.find(currentSquare => currentSquare.showArrow)?.squareID;
+    // let targetPosition = this.squares.find(currentSquare => currentSquare.showTarget)?.squareID;
 
-    if (startPosition == undefined) startPosition = "Square0";
-    if (targetPosition == undefined) targetPosition = "Square1";
+    // if (startPosition == undefined) startPosition = "Square0";
+    // if (targetPosition == undefined) targetPosition = "Square1";
 
-    let shortestPath = this.graph.calculateShortestPath(startPosition, targetPosition)
-    if (shortestPath.length == 0) this.toastr.info("There are no paths available");
-    for(let i = 0; i < shortestPath.length; i++){
-      let square = this.squares.find(currentSquare => currentSquare.squareID == shortestPath[i])
-      square?.setShortestPath();
-      await CONSTANTS.delay(1);
-      square?.changeStartPosition();
+    // let shortestPath = this.graph.calculateShortestPath(startPosition, targetPosition)
+    // if (shortestPath.length == 0) this.toastr.info("There are no paths available");
+    // for(let i = 0; i < shortestPath.length; i++){
+    //   let square = this.squares.find(currentSquare => currentSquare.squareID == shortestPath[i])
+    //   square?.setShortestPath();
+    //   await CONSTANTS.delay(1);
+    //   square?.changeStartPosition();
 
-    }
+    // }
   }
 
   clearShortestPath(): void {
