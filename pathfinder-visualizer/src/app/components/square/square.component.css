@@ -9,9 +9,8 @@
 }
 
 .visited {
-    border: solid lightblue 1px;
     animation-name: fillerAnimation;
-    animation-duration: 1.5s;
+    animation-duration: 0.5s;
     animation-timing-function: ease-out;
     animation-delay: 0;
     animation-direction: alternate;
@@ -34,10 +33,26 @@
 
 .showArrow{
     content: url("https://clementmihailescu.github.io/Pathfinding-Visualizer/public/styling/triangletwo-right.svg"); 
+    animation-name: targetAnimation;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-out;
+    animation-delay: 0;
+    animation-direction: alternate;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
 }
 
 .showTarget{
     content: url("https://clementmihailescu.github.io/Pathfinding-Visualizer/public/styling/circle.svg");
+    animation-name: targetAnimation;
+    animation-duration: 0.2s;
+    animation-timing-function: ease-out;
+    animation-delay: 0;
+    animation-direction: alternate;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
 }
 
 @keyframes fillerAnimation {
@@ -47,14 +62,29 @@
         border-radius: 100%;
     }
     50% {
+        transform: scale(.5);
         background-color: rgba(17, 104, 217, 0.75);
+        border-radius: 100%;
     }
     75% {
-        transform: scale(1.2);
+        transform: scale(.8);
         background-color: rgba(0, 217, 159, 0.75);
+        border-radius: 100%;
     }
     100% {
         transform: scale(1.0);
         background-color: rgba(0, 190, 218, 0.75);
+    }
+  }
+
+  @keyframes targetAnimation {
+    50% {
+        transform: scale(.5);
+    }
+    75% {
+        transform: scale(.8);
+    }
+    100% {
+        transform: scale(1.0);
     }
   }
