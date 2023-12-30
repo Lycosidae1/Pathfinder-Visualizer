@@ -3,6 +3,7 @@ import { BoardService } from 'src/app/services/board.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SHORTEST_PATH_COLOR } from 'src/assets/constant';
 import { first } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 enum SquareState {
   CLEAR = 0,
@@ -25,7 +26,7 @@ export class SquareComponent implements OnInit {
   showArrow = false;  
   showTarget = false;
 
-  constructor(private mouseService: MouseService, private boardService: BoardService) {};
+  constructor(private mouseService: MouseService, private boardService: BoardService, private toastr: ToastrService) {};
 
   ngOnInit(): void {
     this.handleSubscriptions();
@@ -115,13 +116,13 @@ export class SquareComponent implements OnInit {
       }
 
       case Item.START: {
-        if(this.squareState == SquareState.TARGET) return;
+        if(this.squareState == SquareState.TARGET || this.squareState == SquareState.BLOCKED) return;
         this.changeStartPosition();
         break;
       }
 
       case Item.TARGET: {
-        if(this.squareState == SquareState.START) return;
+        if(this.squareState == SquareState.START || this.squareState == SquareState.BLOCKED) return;
         this.changeTargetPosition();
         break;
       }
@@ -148,16 +149,16 @@ export class SquareComponent implements OnInit {
   onMouseUp(): void {
     switch(this.mouseService.getItemState){
       case Item.START: {
-        if(this.squareState == SquareState.BLOCKED || this.squareState == SquareState.CLEAR) {
+        if(this.squareState == SquareState.BLOCKED) {
           this.setClearSquare()
           this.changeStartPosition();
         }
         else if(this.squareState == SquareState.TARGET) {
           this.setPreviousElement.emit( { eventType: "start", squareID: this.mouseService.getPreviousStart });
+          this.toastr.error("You can't place the start point on the target node.");
         }
         break;
       }
-
       case Item.TARGET: {
         if(this.squareState == SquareState.BLOCKED || this.squareState == SquareState.CLEAR) {
           this.setClearSquare()
@@ -165,6 +166,7 @@ export class SquareComponent implements OnInit {
         }
         else if(this.squareState == SquareState.START) {
           this.setPreviousElement.emit( { eventType: "target", squareID: this.mouseService.getPreviousTarget });
+          this.toastr.error("You can't place the target on the start node.");
         }
         break;
       }
