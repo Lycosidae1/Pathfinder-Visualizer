@@ -1,9 +1,9 @@
 <div class="square" id="{{this.squareID}}" [ngStyle]="currentStyles"
     (mousedown)="onMouseDown()" (mouseup)="onMouseUp()"(mouseenter)="onMouseEnter()"  (mouseleave)="onMouseLeave()">
     @if(this.showArrow){
-        <img class="showArrow showElem">
+        <img class="showArrow">
     }
     @if(this.showTarget){
-        <img class="showTarget showElem">
+        <img class="showTarget">
     }
 </div>

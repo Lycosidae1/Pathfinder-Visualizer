@@ -208,17 +208,13 @@ export class SquareComponent implements OnInit {
 
   applyShortestPathAnimation(currentDiff: number, height: number): void {
     this.removeVisitedClass();
-      this.currentStyles = {
-        'background-color': 'rgb(255, 254, 106)',
-        'border-top': 'border: solid lightblue 1px',
-        'border-bottom': 'border: solid lightblue 1px',
-        'border-left': '0px',
-        'border-right': '0px',
-      }
-      // document.getElementById(this.squareID)?.classList.add("showElem");
+    this.currentStyles = {
+      'background-color': 'rgb(255, 254, 106)',
+    }
       switch (currentDiff){
         case 1:
           document.getElementById(this.squareID)?.classList.add("showArrowDown");
+
           break;
         case -1:
           document.getElementById(this.squareID)?.classList.add("showArrowUp");
@@ -233,7 +229,7 @@ export class SquareComponent implements OnInit {
   }
 
   hideArrowAnimation(): void {
-    let arrowsToRemove = ["showArrowDown", "showArrowUp", "showArrowRight", "showArrowLeft", "showElem"];
+    let arrowsToRemove = ["showArrowDown", "showArrowUp", "showArrowRight", "showArrowLeft"];
     for(let i = 0; i < arrowsToRemove.length; i++){
       document.getElementById(this.squareID)?.classList.remove(arrowsToRemove[i]);
     }

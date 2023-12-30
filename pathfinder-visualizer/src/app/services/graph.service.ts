@@ -96,14 +96,14 @@ export class GraphService {
         currentDiff = nextSquareID - currentSquareID;   
         squares[i]?.applyShortestPathAnimation(currentDiff, this.height);
         await CONSTANTS.delay(50);   
-        // squares[i]?.hideArrowAnimation();
+        squares[i]?.hideArrowAnimation();
 
       }
       else {
         squares[i]?.applyShortestPathAnimation(currentDiff, this.height);
         await CONSTANTS.delay(50);
 
-        // squares[i]?.hideArrowAnimation();
+        squares[i]?.hideArrowAnimation();
       }
     }
   }
