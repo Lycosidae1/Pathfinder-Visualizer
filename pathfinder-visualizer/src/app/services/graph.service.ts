@@ -48,7 +48,6 @@ export class GraphService {
       for(let j = 0; j < this.height - 1; j++){
         if (this.squares.get(j + i * this.height)?.currentStyles['background-color'] != CONSTANTS.OBSTACLE_POSITION_COLOR
         && this.squares.get((j + 1) + i * this.height)?.currentStyles['background-color'] != CONSTANTS.OBSTACLE_POSITION_COLOR){
-        // && this.squares.get((j - 1) + i * this.height)?.currentStyles['background-color'] != 'black'){
           this.graph.addEdge("Square" + (j + i * this.height).toString(), "Square" + ((j + 1) + i * this.height).toString());
         }
       }
@@ -59,7 +58,6 @@ export class GraphService {
       for(let j = 0; j < this.height; j++){
         if (this.squares.get(j + i * this.height)?.currentStyles['background-color'] != CONSTANTS.OBSTACLE_POSITION_COLOR 
         && this.squares.get((j + this.height) + i * this.height)?.currentStyles['background-color'] != CONSTANTS.OBSTACLE_POSITION_COLOR){
-        // && this.squares.get((j - this.height) + i * this.height)?.currentStyles['background-color'] != 'black'){
           this.graph.addEdge("Square" + (j + i * this.height).toString(), "Square" + ((j + this.height) + i * this.height).toString());
         }
       }
@@ -79,9 +77,34 @@ export class GraphService {
 
     let shortestPath = this.graph.calculateShortestPath(startPosition, targetPosition)
     if (shortestPath.length == 0) this.toastr.info("There are no paths available");
+    
+    let squares = [];
     for(let i = 0; i < shortestPath.length; i++){
-      this.squares.find(currentSquare => currentSquare.squareID == shortestPath[i])?.setShortestPath(shortestPath[i]);
-      await CONSTANTS.delay(1);
+      squares.push(this.squares.find(currentSquare => currentSquare.squareID == shortestPath[i]));
+      squares[i]?.setShortestPath();
+      await CONSTANTS.delay(50);
+    }
+
+    // Square 1  Square11  Square 12
+    let currentSquareID: number = 0;
+    let nextSquareID: number = 0;
+    let currentDiff = 0;
+    for(let i = 0; i < shortestPath.length; i++){
+      if(i != shortestPath.length - 1){    
+        currentSquareID = parseInt(squares[i]!.squareID.slice(6));
+        nextSquareID = parseInt(squares[i + 1]!.squareID.slice(6));
+        currentDiff = nextSquareID - currentSquareID;   
+        squares[i]?.applyShortestPathAnimation(currentDiff, this.height);
+        await CONSTANTS.delay(50);   
+        // squares[i]?.hideArrowAnimation();
+
+      }
+      else {
+        squares[i]?.applyShortestPathAnimation(currentDiff, this.height);
+        await CONSTANTS.delay(50);
+
+        // squares[i]?.hideArrowAnimation();
+      }
     }
   }
 

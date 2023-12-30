@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, QueryList, ViewChildren } from '@angular/core';
 import * as DIMENSION from 'src/assets/constant';
-import { BoardService, NodeSelection } from './services/board.service';
+import { BoardService } from './services/board.service';
 import { SquareComponent } from './components/square/square.component';
 import { faPlay, faBullseye } from '@fortawesome/free-solid-svg-icons';
 import { GraphService } from './services/graph.service';
@@ -16,7 +16,7 @@ export class AppComponent implements AfterViewInit {
   @ViewChildren(SquareComponent) child!: QueryList<SquareComponent>;
   width = Array(DIMENSION.BORD_WIDTH);
   height = Array(DIMENSION.BORD_HEIGHT);
-  selectedAlgorithm: string = "";
+  selectedAlgorithm: string = "Dijkstra";
   faArrow = faPlay;
   faTarget = faBullseye;
   algorithmOptions = AlgorithmOptions;
@@ -54,6 +54,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   onPreviousEvent(event: any): void {
+    console.log("Event: ", event);
     if (event.eventType == "start") {
       this.setPreviouStart(event.squareID);
     }

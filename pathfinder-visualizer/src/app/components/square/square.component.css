@@ -6,23 +6,30 @@
     background-color: white;
     border: solid lightblue 1px;
     z-index: 0;
+    justify-content: center;
 }
 
 .visited {
     animation-name: fillerAnimation;
-    animation-duration: 0.5s;
+    animation-duration: 1.5s;
     animation-timing-function: ease-out;
-    animation-delay: 0;
     animation-direction: alternate;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
     animation-play-state: running;
+    z-index: 0;
 }
 
 .showElem {
     position: absolute;
     z-index: 10000;
-    animation-duration: 2.0s;
+}
+
+.showArrow {
+    content: url("https://clementmihailescu.github.io/Pathfinding-Visualizer/public/styling/triangletwo-right.svg"); 
+    z-index: 100000;
+    animation-name: targetAnimation;
+    animation-duration: 0.25s;
     animation-timing-function: ease-out;
     animation-delay: 0;
     animation-direction: alternate;
@@ -31,22 +38,30 @@
     animation-play-state: running;
 }
 
-.showArrow{
+.showArrowUp {
+    content: url("https://clementmihailescu.github.io/Pathfinding-Visualizer/public/styling/triangletwo-up.svg"); 
+    z-index: 100000;
+}
+
+.showArrowRight {
     content: url("https://clementmihailescu.github.io/Pathfinding-Visualizer/public/styling/triangletwo-right.svg"); 
-    animation-name: targetAnimation;
-    animation-duration: 0.5s;
-    animation-timing-function: ease-out;
-    animation-delay: 0;
-    animation-direction: alternate;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-    animation-play-state: running;
+    z-index: 100000;
+}
+
+.showArrowDown {
+    content: url("https://clementmihailescu.github.io/Pathfinding-Visualizer/public/styling/triangletwo-down.svg"); 
+    z-index: 100000;
+}
+
+.showArrowLeft {
+    content: url("https://clementmihailescu.github.io/Pathfinding-Visualizer/public/styling/triangletwo-left.svg"); 
+    z-index: 100000;
 }
 
 .showTarget{
     content: url("https://clementmihailescu.github.io/Pathfinding-Visualizer/public/styling/circle.svg");
     animation-name: targetAnimation;
-    animation-duration: 0.2s;
+    animation-duration: 0.5s;
     animation-timing-function: ease-out;
     animation-delay: 0;
     animation-direction: alternate;
@@ -57,7 +72,12 @@
 
 @keyframes fillerAnimation {
     0% {
-        transform: scale(.3);
+        transform: scale(.1);
+        background-color: rgba(0, 0, 66, 0.75);
+        border-radius: 100%;
+    }
+    25% {
+        transform: scale(.25);
         background-color: rgba(0, 0, 66, 0.75);
         border-radius: 100%;
     }
@@ -67,7 +87,7 @@
         border-radius: 100%;
     }
     75% {
-        transform: scale(.8);
+        transform: scale(.75);
         background-color: rgba(0, 217, 159, 0.75);
         border-radius: 100%;
     }
@@ -82,7 +102,7 @@
         transform: scale(.5);
     }
     75% {
-        transform: scale(.8);
+        transform: scale(.75);
     }
     100% {
         transform: scale(1.0);

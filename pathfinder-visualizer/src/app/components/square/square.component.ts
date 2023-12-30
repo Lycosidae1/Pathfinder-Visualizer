@@ -2,6 +2,7 @@ import { Item, MouseService } from '../../services/mouse-service.service';
 import { BoardService } from 'src/app/services/board.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SHORTEST_PATH_COLOR } from 'src/assets/constant';
+import { first } from 'rxjs';
 
 enum SquareState {
   CLEAR = 0,
@@ -40,7 +41,37 @@ export class SquareComponent implements OnInit {
   }
 
   handleSubscriptions(): void {
-    //  TODO
+    this.boardService.clearBoardEvent.asObservable().subscribe(() => {
+      if(this.showArrow){
+        this.setStartSquare();
+      }
+      else if(this.showTarget){
+        this.setTargetSquare();
+      }
+      else {
+        this.setClearSquare();
+      }
+      this.removeVisitedClass();
+    });
+    this.boardService.clearObstaclesEvent.asObservable().subscribe(() => {
+      if(this.squareState == SquareState.BLOCKED){
+        this.setClearSquare();
+      }
+    });
+    this.boardService.clearShortestPathEvent.asObservable().subscribe(() => {
+      if(this.squareState == SquareState.SHORTESTPATH){    
+        if(this.showArrow){
+          this.setStartSquare();
+        }
+        else if(this.showTarget){
+          this.setTargetSquare();
+        }
+        else {
+          this.setClearSquare();
+        }
+        this.removeVisitedClass();
+      }   
+    });
   }
 
   onMouseDown(): void {
@@ -61,7 +92,7 @@ export class SquareComponent implements OnInit {
         this.setClearSquare();
         this.changeStartPosition();
         this.mouseService.setItemState = Item.START;
-        // this.mouseService.setPreviousStart = this.squareID;
+        this.mouseService.setPreviousStart = this.squareID;
         break;
       }
 
@@ -70,11 +101,6 @@ export class SquareComponent implements OnInit {
         this.changeTargetPosition();
         this.mouseService.setItemState = Item.TARGET;
         this.mouseService.setPreviousTarget = this.squareID;
-        break;
-      }
-
-      case SquareState.SHORTESTPATH: {
-        // TODO
         break;
       }
     }  
@@ -89,11 +115,13 @@ export class SquareComponent implements OnInit {
       }
 
       case Item.START: {
+        if(this.squareState == SquareState.TARGET) return;
         this.changeStartPosition();
         break;
       }
 
       case Item.TARGET: {
+        if(this.squareState == SquareState.START) return;
         this.changeTargetPosition();
         break;
       }
@@ -103,11 +131,15 @@ export class SquareComponent implements OnInit {
   onMouseLeave(): void {
     switch(this.mouseService.getItemState){
       case Item.START: {
-        this.changeStartPosition();
+        if(this.squareState == SquareState.TARGET) return;
+        this.showArrow = false;
+        this.squareState = SquareState.CLEAR;
         break;
       }
       case Item.TARGET: {
-        this.changeTargetPosition();
+        if(this.squareState == SquareState.START) return;
+        this.showTarget = false;
+        this.squareState = SquareState.CLEAR;
         break;
       }
     }  
@@ -143,7 +175,6 @@ export class SquareComponent implements OnInit {
   changeStartPosition(): void {
     this.showArrow = !this.showArrow;
     this.showArrow ? this.squareState = SquareState.START : this.squareState = SquareState.CLEAR;
-
   }
   changeTargetPosition(): void {
     this.showTarget = !this.showTarget;
@@ -162,11 +193,58 @@ export class SquareComponent implements OnInit {
 
   setStartSquare(): void {
     this.squareState = SquareState.START;
-    this.applyBlackColor();
+    this.applyNeutralColor();
   }
 
-  setShortestPath(currentSquare: string): void {
-    document.getElementById(currentSquare)?.classList.add("visited");
+  setTargetSquare(): void {
+    this.squareState = SquareState.TARGET;
+    this.applyNeutralColor();
+  }
+
+  setShortestPath(): void {
+    this.squareState = SquareState.SHORTESTPATH;
+    this.addVisitedClass();
+  }
+
+  applyShortestPathAnimation(currentDiff: number, height: number): void {
+    this.removeVisitedClass();
+      this.currentStyles = {
+        'background-color': 'rgb(255, 254, 106)',
+        'border-top': 'border: solid lightblue 1px',
+        'border-bottom': 'border: solid lightblue 1px',
+        'border-left': '0px',
+        'border-right': '0px',
+      }
+      // document.getElementById(this.squareID)?.classList.add("showElem");
+      switch (currentDiff){
+        case 1:
+          document.getElementById(this.squareID)?.classList.add("showArrowDown");
+          break;
+        case -1:
+          document.getElementById(this.squareID)?.classList.add("showArrowUp");
+          break;
+        case height:
+          document.getElementById(this.squareID)?.classList.add("showArrowRight");
+          break;
+        case -height:
+          document.getElementById(this.squareID)?.classList.add("showArrowLeft");
+          break;
+      }
+  }
+
+  hideArrowAnimation(): void {
+    let arrowsToRemove = ["showArrowDown", "showArrowUp", "showArrowRight", "showArrowLeft", "showElem"];
+    for(let i = 0; i < arrowsToRemove.length; i++){
+      document.getElementById(this.squareID)?.classList.remove(arrowsToRemove[i]);
+    }
+  }
+
+  addVisitedClass(): void {
+    document.getElementById(this.squareID)?.classList.add("visited");
+  }
+
+  removeVisitedClass(): void {
+    document.getElementById(this.squareID)?.classList.remove("visited");
   }
 
   applyBlackColor(): void {
