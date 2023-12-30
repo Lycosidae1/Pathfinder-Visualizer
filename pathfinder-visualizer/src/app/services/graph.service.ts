@@ -3,7 +3,6 @@ import { SquareComponent } from '../components/square/square.component';
 import * as CONSTANTS from 'src/assets/constant';
 import { DijkstraCalculator } from 'dijkstra-calculator';
 import { ToastrService } from 'ngx-toastr';
-import { delay } from 'src/assets/constant';
 import { BoardService } from './board.service';
 
 @Injectable({
@@ -95,7 +94,8 @@ export class GraphService {
         nextSquareID = parseInt(squares[i + 1]!.squareID.slice(6));
         currentDiff = nextSquareID - currentSquareID;   
         squares[i]?.applyShortestPathAnimation(currentDiff, this.height);
-        await CONSTANTS.delay(50);   
+        await CONSTANTS.delay(50);
+        if(i==0) continue  
         squares[i]?.hideArrowAnimation();
 
       }

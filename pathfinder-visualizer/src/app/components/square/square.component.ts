@@ -53,6 +53,7 @@ export class SquareComponent implements OnInit {
         this.setClearSquare();
       }
       this.removeVisitedClass();
+      this.hideArrowAnimation();
     });
     this.boardService.clearObstaclesEvent.asObservable().subscribe(() => {
       if(this.squareState == SquareState.BLOCKED){
@@ -71,7 +72,8 @@ export class SquareComponent implements OnInit {
           this.setClearSquare();
         }
         this.removeVisitedClass();
-      }   
+      }
+      this.hideArrowAnimation();   
     });
   }
 
