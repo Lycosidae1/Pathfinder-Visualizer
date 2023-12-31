@@ -1,7 +1,7 @@
 import { Injectable, QueryList } from '@angular/core';
 import { SquareComponent } from '../components/square/square.component';
 import * as CONSTANTS from 'src/assets/constant';
-import { DijkstraCalculator } from 'dijkstra-calculator';
+import { DijkstraCalculator } from 'c:/Users/lpdet/Documents/Projet_personnel/Pathfinder-Visualizer/dijkstra-calculator-master/dijkstra-calculator-master/src/index'
 import { ToastrService } from 'ngx-toastr';
 import { BoardService } from './board.service';
 
@@ -14,8 +14,10 @@ export class GraphService {
   private width: number = CONSTANTS.BORD_WIDTH;
   private height: number = CONSTANTS.BORD_HEIGHT;
   private squares!: QueryList<SquareComponent>;
+  private nodes!: [];
   
-  constructor(private toastr: ToastrService, private boardService: BoardService) {   }
+  constructor(private toastr: ToastrService, private boardService: BoardService) { 
+  }
 
   public set setWidth(width : number) {
     this.width = width;
@@ -68,6 +70,10 @@ export class GraphService {
     this.graph = new DijkstraCalculator();
     this.updateVertices();
 
+    this.graph.adjencyListBehavior.asObservable().subscribe((node: any) => {
+      this.squares.find(currentSquare => currentSquare.squareID == node)?.setShortestPath();
+    })
+
     let startPosition = this.squares.find(currentSquare => currentSquare.showArrow)?.squareID;
     let targetPosition = this.squares.find(currentSquare => currentSquare.showTarget)?.squareID;
 
@@ -80,8 +86,8 @@ export class GraphService {
     let squares = [];
     for(let i = 0; i < shortestPath.length; i++){
       squares.push(this.squares.find(currentSquare => currentSquare.squareID == shortestPath[i]));
-      squares[i]?.setShortestPath();
-      await CONSTANTS.delay(50);
+      // squares[i]?.setShortestPath();
+      // await CONSTANTS.delay(50);
     }
 
     // Square 1  Square11  Square 12
