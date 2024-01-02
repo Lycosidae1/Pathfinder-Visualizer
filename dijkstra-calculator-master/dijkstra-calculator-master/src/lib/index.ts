@@ -88,7 +88,6 @@ export class DijkstraCalculator {
 
   constructor() {
     this.adjacencyList = {};
-    console.log("dooge");
   }
 
   addVertex(vertex: NodeId) {
@@ -106,7 +105,7 @@ export class DijkstraCalculator {
    * @param finish The ending {@link NodeId} to complete traversal
    * @returns an {@type Array<string>} showing how to traverse the nodes. If traversal is impossible then it will return an empty array
    */
-  calculateShortestPath(start: NodeId, finish: NodeId) {
+  async calculateShortestPath(start: NodeId, finish: NodeId) {
     const nodes = new PriorityQueue();
     const distances: { [key: NodeId]: number } = {};
     const previous: { [key: NodeId]: NodeId } = {};
@@ -140,6 +139,8 @@ export class DijkstraCalculator {
           //find neighboring node
           const nextNode = this.adjacencyList[smallest][neighbor];
           this.adjencyListBehavior.next(nextNode.id);
+          await this.delay(1);
+
           //calculate new distance to neighboring node
           const candidate = distances[smallest] + nextNode.weight;
           const nextNeighbor = nextNode.id;
@@ -170,27 +171,7 @@ export class DijkstraCalculator {
     return finalPath;
   }
 
-  /**
-   * Creates a linked list of the result with each element with a source and target property
-   * @param start The starting {@link NodeId} to begin traversal
-   * @param finish The ending {@link NodeId} to complete traversal
-   * @returns Returns an array where each element is a {@link LinkedListItem}
-   */
-  calculateShortestPathAsLinkedListResult(
-    start: NodeId,
-    finish: NodeId
-  ): LinkedListItem[] {
-    const array: string[] = this.calculateShortestPath(start, finish);
-    const linkedListItems: LinkedListItem[] = [];
-    for (let i = 0; i < array.length; i++) {
-      if (i == array.length - 1) {
-        break;
-      }
-      linkedListItems.push({
-        source: array[i],
-        target: array[i + 1],
-      });
-    }
-    return linkedListItems;
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 }
