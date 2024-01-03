@@ -1,7 +1,7 @@
 import { Injectable, QueryList } from '@angular/core';
 import { SquareComponent } from '../components/square/square.component';
 import * as CONSTANTS from 'src/assets/constant';
-import { DijkstraCalculator } from 'c:/Users/lpdet/Documents/Projet_personnel/Pathfinder-Visualizer/dijkstra-calculator-master/dijkstra-calculator-master/src/index'
+import { DijkstraCalculator } from 'D:/Projects/Pathfinder-Visualizer/dijkstra-calculator-master/dijkstra-calculator-master/src/index'
 import { ToastrService } from 'ngx-toastr';
 import { BoardService } from './board.service';
 
@@ -14,7 +14,7 @@ export class GraphService {
   private width: number = CONSTANTS.BORD_WIDTH;
   private height: number = CONSTANTS.BORD_HEIGHT;
   private squares!: QueryList<SquareComponent>;
-  private nodes!: [];
+  private nodes: Array<string | undefined> = new Array<string | undefined>();
   
   constructor(private toastr: ToastrService, private boardService: BoardService) { 
   }
@@ -70,9 +70,10 @@ export class GraphService {
     this.graph = new DijkstraCalculator();
     this.updateVertices();
 
-    this.graph.adjencyListBehavior.asObservable().subscribe((node: any) => {
-      this.squares.find(currentSquare => currentSquare.squareID == node)?.setShortestPath();
+    this.graph.adjencyListBehavior.asObservable().subscribe((nodeList: Array<string | undefined>) => {
+      this.nodes = nodeList;
     })
+
 
     let startPosition = this.squares.find(currentSquare => currentSquare.showArrow)?.squareID;
     let targetPosition = this.squares.find(currentSquare => currentSquare.showTarget)?.squareID;
@@ -83,6 +84,12 @@ export class GraphService {
     let shortestPath = this.graph.calculateShortestPath(startPosition, targetPosition)
     if (shortestPath.length == 0) this.toastr.info("There are no paths available");
     
+
+    for(let i = 0; i < this.nodes.length; i++){
+      this.squares.find(currentSquare => currentSquare.squareID == this.nodes[i])?.addVisitedClass();
+      await CONSTANTS.delay(1);
+    }
+
     let squares = [];
     for(let i = 0; i < shortestPath.length; i++){
       squares.push(this.squares.find(currentSquare => currentSquare.squareID == shortestPath[i]));
@@ -94,6 +101,7 @@ export class GraphService {
     let currentSquareID: number = 0;
     let nextSquareID: number = 0;
     let currentDiff = 0;
+    // await CONSTANTS.delay(1050);
     for(let i = 0; i < shortestPath.length; i++){
       if(i != shortestPath.length - 1){    
         currentSquareID = parseInt(squares[i]!.squareID.slice(6));

@@ -1,5 +1,4 @@
 import { BehaviorSubject } from 'rxjs';
-import * as CONSTANTS from 'src/assets/constant';
 /**
  * A unique identifier for the
  */
@@ -84,7 +83,7 @@ export interface LinkedListItem {
 
 export class DijkstraCalculator {
   adjacencyList: { [key: NodeId]: { id: NodeId; weight: number }[] };
-  adjencyListBehavior: BehaviorSubject<any> = new BehaviorSubject<any>(null)
+  adjencyListBehavior: BehaviorSubject<Array<string | undefined>> = new BehaviorSubject<Array<string | undefined>>(new Array());
 
   constructor() {
     this.adjacencyList = {};
@@ -105,11 +104,12 @@ export class DijkstraCalculator {
    * @param finish The ending {@link NodeId} to complete traversal
    * @returns an {@type Array<string>} showing how to traverse the nodes. If traversal is impossible then it will return an empty array
    */
-  async calculateShortestPath(start: NodeId, finish: NodeId) {
+  calculateShortestPath(start: NodeId, finish: NodeId) {
     const nodes = new PriorityQueue();
     const distances: { [key: NodeId]: number } = {};
     const previous: { [key: NodeId]: NodeId } = {};
     const path = []; //to return at end
+    const nodeID = new Set<string | undefined>();
     let smallest: string | null = null;
     //build up initial state
     for (const vertex in this.adjacencyList) {
@@ -138,9 +138,7 @@ export class DijkstraCalculator {
         for (const neighbor in this.adjacencyList[smallest]) {
           //find neighboring node
           const nextNode = this.adjacencyList[smallest][neighbor];
-          this.adjencyListBehavior.next(nextNode.id);
-          await this.delay(1);
-
+          nodeID.add(nextNode.id);
           //calculate new distance to neighboring node
           const candidate = distances[smallest] + nextNode.weight;
           const nextNeighbor = nextNode.id;
@@ -156,6 +154,8 @@ export class DijkstraCalculator {
       }
     }
 
+    this.adjencyListBehavior.next(Array.from(nodeID.values()));
+
     let finalPath: string[] = [];
     if (!smallest) {
       finalPath = path.reverse();
@@ -169,9 +169,5 @@ export class DijkstraCalculator {
     }
 
     return finalPath;
-  }
-
-  delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 }
