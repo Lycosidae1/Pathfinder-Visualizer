@@ -14,7 +14,16 @@ export class BoardService {
   clearBoardEvent: Subject<undefined> = new Subject();
   clearObstaclesEvent: Subject<undefined> = new Subject();
   clearShortestPathEvent: Subject<undefined> = new Subject();
-  constructor() {   }
+  private isVisualizing: boolean = false;
+  constructor() {}
+
+  public get IsVisualizing() {
+    return this.isVisualizing;
+  }
+
+  public set setVisualizing(isVisualizing : boolean) {
+    this.isVisualizing = isVisualizing;
+  }
 
   clearBoard(): void {
     this.clearBoardEvent.next(undefined);

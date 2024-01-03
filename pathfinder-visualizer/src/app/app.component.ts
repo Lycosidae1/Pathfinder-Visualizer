@@ -38,19 +38,30 @@ export class AppComponent implements AfterViewInit {
   }
 
   clearBoard(): void {
-    this.boardService.clearBoard();
+    if(!this.boardService.IsVisualizing) this.boardService.clearBoard();
   }
 
   clearObstacles(): void {
-    this.boardService.clearObstacles();
+    if(!this.boardService.IsVisualizing) this.boardService.clearObstacles();
   }
 
   clearShortestPath(): void {
-    this.boardService.clearShortestPath();
+    if(!this.boardService.IsVisualizing) this.boardService.clearShortestPath();
   }
 
   visualize(): void {
-    this.selectedAlgorithm == "" ? this.toastr.error("You haven't selected an algorithm!") : this.graphService.visualize();
+    this.boardService.setVisualizing = true;
+    switch(this.selectedAlgorithm){
+      case "":
+        this.toastr.error("You haven't selected an algorithm!");
+        break;
+      case this.algorithmOptions[0]:
+        this.graphService.visualizeDijkstra();
+        break;
+      case this.algorithmOptions[1]:
+        this.graphService.visualizeAStar();
+        break;
+    }
   }
 
   onPreviousEvent(event: any): void {
