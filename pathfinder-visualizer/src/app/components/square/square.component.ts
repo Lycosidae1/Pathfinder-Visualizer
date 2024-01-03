@@ -78,6 +78,7 @@ export class SquareComponent implements OnInit {
   }
 
   onMouseDown(): void {
+    if(this.boardService.IsVisualizing) return;
     switch(this.squareState){
       case SquareState.CLEAR: {
         this.setBlockSquare();

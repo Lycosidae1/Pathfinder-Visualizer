@@ -127,6 +127,4 @@ export class GraphService {
     this.clearShortestPath();
     
   }
-
-  
 }

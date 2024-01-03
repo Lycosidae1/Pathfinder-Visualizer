@@ -7,9 +7,9 @@ export const Obstacles = [
 
 export const AlgorithmOptions = [
     'Dijkstra',
-    'A*',
-    'Convergent Swarm',
-    'Bidirectional Swarm',
+    // 'A*',
+    // 'Convergent Swarm',
+    // 'Bidirectional Swarm',
 ]
 
 export const OBSTACLE_POSITION_COLOR = 'black';

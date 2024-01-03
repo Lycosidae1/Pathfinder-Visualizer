@@ -50,6 +50,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   visualize(): void {
+    if(this.boardService.IsVisualizing) return;
     this.boardService.setVisualizing = true;
     switch(this.selectedAlgorithm){
       case "":
