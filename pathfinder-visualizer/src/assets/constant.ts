@@ -7,9 +7,9 @@ export const Obstacles = [
 
 export const AlgorithmOptions = [
     'Dijkstra',
-    'A*',
-    'Convergent Swarm',
-    'Bidirectional Swarm',
+    // 'A*',
+    // 'Convergent Swarm',
+    // 'Bidirectional Swarm',
 ]
 
 export const OBSTACLE_POSITION_COLOR = 'black';
@@ -17,5 +17,5 @@ export const NEUTRAL_COLOR = 'white';
 export const SHORTEST_PATH_COLOR = 'lightblue';
 
 export function delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
-  }
+    return new Promise(f => setTimeout(f, ms));
+}

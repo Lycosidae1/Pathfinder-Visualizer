@@ -78,6 +78,7 @@ export class SquareComponent implements OnInit {
   }
 
   onMouseDown(): void {
+    if(this.boardService.IsVisualizing) return;
     switch(this.squareState){
       case SquareState.CLEAR: {
         this.setBlockSquare();
@@ -212,24 +213,24 @@ export class SquareComponent implements OnInit {
 
   applyShortestPathAnimation(currentDiff: number, height: number): void {
     this.removeVisitedClass();
+    this.squareState = SquareState.SHORTESTPATH;
     this.currentStyles = {
       'background-color': 'rgb(255, 254, 106)',
     }
-      switch (currentDiff){
-        case 1:
-          document.getElementById(this.squareID)?.classList.add("showArrowDown");
-
-          break;
-        case -1:
-          document.getElementById(this.squareID)?.classList.add("showArrowUp");
-          break;
-        case height:
-          document.getElementById(this.squareID)?.classList.add("showArrowRight");
-          break;
-        case -height:
-          document.getElementById(this.squareID)?.classList.add("showArrowLeft");
-          break;
-      }
+    switch (currentDiff){
+      case 1:
+        document.getElementById(this.squareID)?.classList.add("showArrowDown");
+        break;
+      case -1:
+        document.getElementById(this.squareID)?.classList.add("showArrowUp");
+        break;
+      case height:
+        document.getElementById(this.squareID)?.classList.add("showArrowRight");
+        break;
+      case -height:
+        document.getElementById(this.squareID)?.classList.add("showArrowLeft");
+        break;
+    }
   }
 
   hideArrowAnimation(): void {

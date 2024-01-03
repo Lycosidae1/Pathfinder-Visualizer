@@ -1,7 +1,7 @@
 import { Injectable, QueryList } from '@angular/core';
 import { SquareComponent } from '../components/square/square.component';
 import * as CONSTANTS from 'src/assets/constant';
-import { DijkstraCalculator } from 'dijkstra-calculator';
+import { DijkstraCalculator } from 'D:/Projects/Pathfinder-Visualizer/dijkstra-calculator-master/dijkstra-calculator-master/src/index'
 import { ToastrService } from 'ngx-toastr';
 import { BoardService } from './board.service';
 
@@ -14,8 +14,10 @@ export class GraphService {
   private width: number = CONSTANTS.BORD_WIDTH;
   private height: number = CONSTANTS.BORD_HEIGHT;
   private squares!: QueryList<SquareComponent>;
+  private nodes: Array<string | undefined> = new Array<string | undefined>();
   
-  constructor(private toastr: ToastrService, private boardService: BoardService) {   }
+  constructor(private toastr: ToastrService, private boardService: BoardService) { 
+  }
 
   public set setWidth(width : number) {
     this.width = width;
@@ -29,9 +31,13 @@ export class GraphService {
     this.squares = squares;
   }
 
+  clearShortestPath(): void {
+    this.boardService.clearShortestPath();
+  }
+
   dijkstra(): void {
     this.updateVertices();
-    this.visualize();
+    this.visualizeDijkstra();
   }
 
   updateVertices(): void {
@@ -63,10 +69,15 @@ export class GraphService {
     }
   }
 
-  async visualize(): Promise<void> {
+  async visualizeDijkstra(): Promise<void> {
     this.clearShortestPath();
     this.graph = new DijkstraCalculator();
     this.updateVertices();
+
+    this.graph.adjencyListBehavior.asObservable().subscribe((nodeList: Array<string | undefined>) => {
+      this.nodes = nodeList;
+    })
+
 
     let startPosition = this.squares.find(currentSquare => currentSquare.showArrow)?.squareID;
     let targetPosition = this.squares.find(currentSquare => currentSquare.showTarget)?.squareID;
@@ -77,14 +88,17 @@ export class GraphService {
     let shortestPath = this.graph.calculateShortestPath(startPosition, targetPosition)
     if (shortestPath.length == 0) this.toastr.info("There are no paths available");
     
+
+    for(let i = 0; i < this.nodes.length; i++){
+      this.squares.find(currentSquare => currentSquare.squareID == this.nodes[i])?.setShortestPath();
+      await CONSTANTS.delay(0);
+    }
+
     let squares = [];
     for(let i = 0; i < shortestPath.length; i++){
       squares.push(this.squares.find(currentSquare => currentSquare.squareID == shortestPath[i]));
-      squares[i]?.setShortestPath();
-      await CONSTANTS.delay(50);
     }
 
-    // Square 1  Square11  Square 12
     let currentSquareID: number = 0;
     let nextSquareID: number = 0;
     let currentDiff = 0;
@@ -106,9 +120,11 @@ export class GraphService {
         squares[i]?.hideArrowAnimation();
       }
     }
+    this.boardService.setVisualizing = false;
   }
 
-  clearShortestPath(): void {
-    this.boardService.clearShortestPath();
+  visualizeAStar(): void {
+    this.clearShortestPath();
+    
   }
 }
