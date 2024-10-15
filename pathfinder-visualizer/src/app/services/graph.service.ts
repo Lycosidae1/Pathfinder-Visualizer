@@ -1,7 +1,7 @@
 import { Injectable, QueryList } from '@angular/core';
 import { SquareComponent } from '../components/square/square.component';
 import * as CONSTANTS from 'src/assets/constant';
-import { DijkstraCalculator } from 'D:/Projects/Pathfinder-Visualizer/dijkstra-calculator-master/dijkstra-calculator-master/src/index'
+import { DijkstraCalculator } from '../../../../dijkstra-calculator-master/dijkstra-calculator-master/src/index'
 import { ToastrService } from 'ngx-toastr';
 import { BoardService } from './board.service';
 
