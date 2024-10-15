@@ -11,8 +11,6 @@ export enum Item {
   providedIn: 'root'
 })
 export class MouseService {
-  // mouseState: BehaviorSubject<MouseState> = new BehaviorSubject<MouseState>(MouseState.UP);
-  // itemState: BehaviorSubject<Item> = new BehaviorSubject<Item>(Item.WALL);
   private itemState: Item = Item.NO_ACTION;
   private previousStart: string = "";
   private previousTarget: string = "";

@@ -84,7 +84,6 @@ export class GraphService {
       await CONSTANTS.delay(50);
     }
 
-    // Square 1  Square11  Square 12
     let currentSquareID: number = 0;
     let nextSquareID: number = 0;
     let currentDiff = 0;
